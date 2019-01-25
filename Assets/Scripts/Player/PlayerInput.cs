@@ -14,8 +14,10 @@ public class PlayerInput : MonoBehaviour {
 	[SerializeField] private bool m_crouching;
 	[SerializeField] private bool m_moving;
 	[SerializeField] private bool m_grounded;
+    private Vector2 m_Velocity = Vector2.zero;
+    [SerializeField] private float movementSmoothing = .05f;
 
-	private void Start() {
+    private void Start() {
 		if (r2d == null)
 			r2d = GetComponent<Rigidbody2D>();
 		if(m_sRend == null)
@@ -27,36 +29,27 @@ public class PlayerInput : MonoBehaviour {
 	// left toggle for axis.
 	// Update is called once per frame
 	void FixedUpdate() {
-		if (Input.GetAxis("Horizontal") > 0.1f) {
-			if (r2d.velocity.x > 5f) {
-				return;
-			}
-
-			r2d.AddForce(Vector2.right * moveSpeed);
-
-			if (!m_FacingRight) {
+		Vector2 newVelocity = r2d.velocity;
+		float horInput = Input.GetAxis("Horizontal");
+        if(horInput != 0f){
+            newVelocity.x = moveSpeed * horInput;
+            //left or right?
+			bool right = horInput > 0f ? true : false;
+			if (!m_FacingRight && right) {
 				Flip(m_FacingRight);
 				m_FacingRight = true;
-			}
-
-			m_moving = true;
-		} else if (Input.GetAxis("Horizontal") < -0.1f) {
-			if (r2d.velocity.x < -5f) {
-				return;
-			}
-
-			r2d.AddForce(Vector2.left * moveSpeed);
-
-			if (m_FacingRight) {
+			}else if(m_FacingRight && !right){
 				Flip(m_FacingRight);
 				m_FacingRight = false;
 			}
 
 			m_moving = true;
-		} else {
-			r2d.velocity = new Vector2(0, r2d.velocity.y);
+        }else{
+            newVelocity.x = 0f;
 			m_moving = false;
-		}
+        }
+        
+        r2d.velocity = Vector2.SmoothDamp(r2d.velocity, newVelocity, ref m_Velocity, movementSmoothing);
 
 		if (Input.GetAxis("Vertical") < -0.2f) { //crouching
 			m_crouching = true;
@@ -64,7 +57,9 @@ public class PlayerInput : MonoBehaviour {
 		} else {
 			m_crouching = false;
 		}
+	}
 
+	private void GroundCheck(){
 		RaycastHit2D hit2D;
 		if (Physics2D.Raycast(transform.position, transform.TransformDirection(Vector2.down), 2f, 1 << 9)) {
 			m_grounded = true;
