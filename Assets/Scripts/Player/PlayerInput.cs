@@ -12,6 +12,8 @@ public class PlayerInput : MonoBehaviour {
 
 	[SerializeField] private bool m_FacingRight;
 	[SerializeField] private bool m_crouching;
+	[SerializeField] private bool m_moving;
+	[SerializeField] private bool m_grounded;
 
 	private void Start() {
 		if (r2d == null)
@@ -25,7 +27,7 @@ public class PlayerInput : MonoBehaviour {
 	// left toggle for axis.
 	// Update is called once per frame
 	void FixedUpdate() {
-		if (Input.GetAxis("Horizontal") > 0f) {
+		if (Input.GetAxis("Horizontal") > 0.1f) {
 			if (r2d.velocity.x > 5f) {
 				return;
 			}
@@ -37,7 +39,8 @@ public class PlayerInput : MonoBehaviour {
 				m_FacingRight = true;
 			}
 
-		} else if (Input.GetAxis("Horizontal") < 0f) {
+			m_moving = true;
+		} else if (Input.GetAxis("Horizontal") < -0.1f) {
 			if (r2d.velocity.x < -5f) {
 				return;
 			}
@@ -49,13 +52,24 @@ public class PlayerInput : MonoBehaviour {
 				m_FacingRight = false;
 			}
 
+			m_moving = true;
 		} else {
-			r2d.velocity = Vector2.zero;
+			r2d.velocity = new Vector2(0, r2d.velocity.y);
+			m_moving = false;
 		}
 
-		if (Input.GetAxis("Vertical") < 0f) { //crouching
+		if (Input.GetAxis("Vertical") < -0.2f) { //crouching
 			m_crouching = true;
 			//DoCrouching();
+		} else {
+			m_crouching = false;
+		}
+
+		RaycastHit2D hit2D;
+		if (Physics2D.Raycast(transform.position, transform.TransformDirection(Vector2.down), 2f, 1 << 9)) {
+			m_grounded = true;
+		} else {
+			m_grounded = false;
 		}
 	}
 
