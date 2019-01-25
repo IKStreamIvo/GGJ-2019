@@ -14,6 +14,7 @@ public class PlayerInput : MonoBehaviour {
 		}
 	}
 
+
 	// a jumps
 	// b crouch
 	// left toggle for axis.
