@@ -20,7 +20,7 @@ public class FamiliarController : MonoBehaviour {
     }
 
     private void Update(){
-        float dist = Vector2.Distance(transform.position, player.transform.position);
+        float dist = Mathf.Abs(transform.position.x - player.transform.position.x);
         if(!moveCloser && dist > followDistance){
             moveCloser = true;
         }else if(moveCloser && dist <= stopFollowDistance){

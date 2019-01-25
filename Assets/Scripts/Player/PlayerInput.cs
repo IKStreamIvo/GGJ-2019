@@ -7,6 +7,7 @@ public class PlayerInput : MonoBehaviour {
 	[Header("Player Components")]
 	Rigidbody2D r2d;
 	SpriteRenderer m_sRend;
+    LineRenderer m_lRend;
 
 	public float moveSpeed;
 
@@ -19,12 +20,16 @@ public class PlayerInput : MonoBehaviour {
     [SerializeField] private float movementSmoothing = .05f;
 
 	[SerializeField] private GameObject weapon_disk;
+	[SerializeField] private Transform arm;
+    [SerializeField] private float m_bulletSpeed;
 
     private void Start() {
 		if (r2d == null)
 			r2d = GetComponent<Rigidbody2D>();
 		if(m_sRend == null)
 			m_sRend = GetComponent<SpriteRenderer>();
+		if (m_lRend == null)
+            m_lRend = GetComponent<LineRenderer>();
 	}
 
 	private void Update() {
@@ -52,7 +57,7 @@ public class PlayerInput : MonoBehaviour {
 	// left toggle for axis.
 	// Update is called once per frame
 	void FixedUpdate() {
-		
+		Aiming();
 
 		Vector2 newVelocity = r2d.velocity;
 		float horInput = Input.GetAxis("Horizontal");
@@ -106,20 +111,42 @@ public class PlayerInput : MonoBehaviour {
 			m_sRend.flipX = toRight;
 	}
 
-	/// <summary>
-	/// Shooting
-	/// </summary>
-	/// <param name="hold">Is the beam supposed to show?</param>
-	void Shoot(bool hold) {
-		if (hold) { //beam
-			r2d.AddForce(m_FacingRight ? Vector2.left * 10f : Vector2.right * 10f);
-		} else { //disk
-			if (EnergyBar.HasEnergy(0.5f)) {
-				EnergyBar.Drain(0.5f);
-				GameObject temp = Instantiate(weapon_disk);
-				temp.GetComponent<Rigidbody2D>().velocity = m_FacingRight ? Vector2.right : Vector2.left;
-			}
+/// <summary>
+    /// Shooting
+    /// </summary>
+    /// <param name="hold">Is the beam supposed to show?</param>
+    void Shoot(bool hold) {
+        if (hold) { //beam
+            r2d.AddForce(m_FacingRight ? Vector2.left * 10f : Vector2.right * 10f);
+            RaycastHit2D hit;
+            if(hit = Physics2D.Raycast(transform.position, transform.TransformDirection(m_FacingRight ? Vector2.right : Vector2.left), Mathf.Infinity, ~1<<10)) {
+                m_lRend.SetPosition(0, transform.position);
+                m_lRend.SetPosition(1, hit.point);
+                Debug.Log(hit.point);
+            }
+        } else { //disk
+            if (EnergyBar.HasEnergy(0.5f)) {
+                EnergyBar.Drain(0.5f);
+                GameObject temp = Instantiate(weapon_disk, transform.position, Quaternion.identity);
+                temp.GetComponent<Rigidbody2D>().velocity = m_FacingRight ? Vector2.right * m_bulletSpeed : Vector2.left * m_bulletSpeed;
+            }
+
+        }
+    }
+
+	private void Telekinesis(){
+		if(Input.GetButtonDown("Fire3")){
 
 		}
+	}
+
+	private void Aiming(){
+		float hor = Input.GetAxis("AimHor");
+		float ver = Input.GetAxis("AimVer");
+		Vector3 targetRot = new Vector3 (0f, 0f, Mathf.Atan2 (ver, hor) * 180 / Mathf.PI);
+		if(hor == 0f && ver == 0f){
+			targetRot = new Vector3(0f, 0f, 180f);
+		}
+		arm.localEulerAngles = targetRot;
 	}
 }
