@@ -24,11 +24,24 @@ public class PlayerInput : MonoBehaviour {
 			m_sRend = GetComponent<SpriteRenderer>();
 	}
 
+	private void Update() {
+		if(Input.GetMouseButtonDown(0)){
+			EnergyBar.Drain(.5f);
+		}
+		if(Input.GetMouseButtonDown(1)){
+			EnergyBar.Drain(.5f, true);
+		}else if(Input.GetMouseButtonUp(1)){
+			EnergyBar.Drain(0f, false);
+		}
+	}
+
 	// a jumps
 	// b crouch
 	// left toggle for axis.
 	// Update is called once per frame
 	void FixedUpdate() {
+		
+
 		Vector2 newVelocity = r2d.velocity;
 		float horInput = Input.GetAxis("Horizontal");
         if(horInput != 0f){
