@@ -70,6 +70,17 @@ public class PlayerInput : MonoBehaviour {
 		} else {
 			m_crouching = false;
 		}
+
+		if (Input.GetAxis("LeftTrigger") > 0.1f) {
+			Shoot(true);
+		}
+
+		if (Input.GetAxis("RightTrigger") > 0.1f && !m_shot) {
+			Shoot(false);
+			m_shot = true;
+		} else {
+			m_shot = false;
+		}
 	}
 
 	private void GroundCheck(){
@@ -83,5 +94,19 @@ public class PlayerInput : MonoBehaviour {
 
 	void Flip(bool toRight) {
 			m_sRend.flipX = toRight;
+	}
+
+	/// <summary>
+	/// Shooting
+	/// </summary>
+	/// <param name="hold">Is the beam supposed to show?</param>
+	void Shoot(bool hold) {
+		if (hold) { //beam
+
+		} else { //disk
+			GameObject temp = Instantiate(GameObject.CreatePrimitive(PrimitiveType.Cube));
+			temp.AddComponent<Rigidbody2D>();
+			temp.GetComponent<Rigidbody2D>().velocity = m_FacingRight ? Vector2.right : Vector2.left;
+		}
 	}
 }
