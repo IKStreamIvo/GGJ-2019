@@ -7,6 +7,7 @@ public class PlayerInput : MonoBehaviour {
 	[Header("Player Components")]
 	Rigidbody2D r2d;
 	SpriteRenderer m_sRend;
+	LineRenderer m_lRend;
 
 	public float moveSpeed;
 
@@ -17,7 +18,8 @@ public class PlayerInput : MonoBehaviour {
 	[SerializeField] private bool m_shot;
     private Vector2 m_Velocity = Vector2.zero;
     [SerializeField] private float movementSmoothing = .05f;
-
+	[SerializeField] private float jumpForce;
+	[SerializeField] private float distFromGround = 2f;
 	[SerializeField] private GameObject weapon_disk;
 
     private void Start() {
@@ -25,6 +27,8 @@ public class PlayerInput : MonoBehaviour {
 			r2d = GetComponent<Rigidbody2D>();
 		if(m_sRend == null)
 			m_sRend = GetComponent<SpriteRenderer>();
+		if (m_lRend == null)
+			m_lRend = GetComponent<LineRenderer>();
 	}
 
 	private void Update() {
@@ -91,11 +95,19 @@ public class PlayerInput : MonoBehaviour {
 		} else {
 			m_shot = false;
 		}
+
+		if (Input.GetButtonDown("Jump")) {
+			if (m_grounded) {
+				r2d.AddForce(new Vector2(0f, jumpForce));
+				m_grounded = false;
+			}
+		}
 	}
 
-	private void GroundCheck(){
+	private void GroundCheck() {
 		RaycastHit2D hit2D;
-		if (Physics2D.Raycast(transform.position, transform.TransformDirection(Vector2.down), 2f, 1 << 9)) {
+		if (Physics2D.Raycast(transform.position, Vector2.down, distFromGround, 1 << 9)) {
+			Debug.DrawRay(transform.position, Vector2.down * distFromGround, Color.red);
 			m_grounded = true;
 		} else {
 			m_grounded = false;
@@ -113,6 +125,10 @@ public class PlayerInput : MonoBehaviour {
 	void Shoot(bool hold) {
 		if (hold) { //beam
 			r2d.AddForce(m_FacingRight ? Vector2.left * 10f : Vector2.right * 10f);
+			RaycastHit2D hit;
+			if(hit = Physics2D.Raycast(transform.position, transform.TransformDirection(m_FacingRight ? Vector2.right : Vector2.left), Mathf.Infinity, ~1<<9)) {
+				m_lRend.SetPosition(1, hit.point);
+			}
 		} else { //disk
 			if (EnergyBar.HasEnergy(0.5f)) {
 				EnergyBar.Drain(0.5f);

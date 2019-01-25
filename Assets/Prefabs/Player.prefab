@@ -116,7 +116,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 2
-  m_FacingRight: 0
+  m_FacingRight: 1
   m_crouching: 0
   m_moving: 0
   m_grounded: 0
