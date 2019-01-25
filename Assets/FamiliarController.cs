@@ -6,8 +6,9 @@ public class FamiliarController : MonoBehaviour {
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private PlayerInput player;
     [SerializeField] private float followDistance;
+    [SerializeField] private float stopFollowDistance;
     [SerializeField] private float movementSmoothing = .05f;
-    [SerializeField] private float movementSpeed;
+    [SerializeField] private float movementSpeedMultiplier = 1.1f;
 
     private bool moveCloser;
     private Vector2 m_Velocity = Vector3.zero;
@@ -19,9 +20,10 @@ public class FamiliarController : MonoBehaviour {
     }
 
     private void Update(){
-        if(Vector2.Distance(transform.position, player.transform.position) > followDistance){
+        float dist = Vector2.Distance(transform.position, player.transform.position);
+        if(!moveCloser && dist > followDistance){
             moveCloser = true;
-        }else{
+        }else if(moveCloser && dist <= stopFollowDistance){
             moveCloser = false;
         }
     }
@@ -29,7 +31,7 @@ public class FamiliarController : MonoBehaviour {
     private void FixedUpdate() {
         Vector2 newVelocity = rb.velocity;
         if(moveCloser){
-            newVelocity.x = movementSpeed;
+            newVelocity.x = player.moveSpeed * movementSpeedMultiplier;
             //left or right?
             float difference = player.transform.position.x - transform.position.x;
             if(difference > 0){
@@ -37,7 +39,6 @@ public class FamiliarController : MonoBehaviour {
             }else{
                 newVelocity.x *= -1;
             }
-            Debug.Log(difference);
         }else{
             newVelocity.x = 0f;
         }
