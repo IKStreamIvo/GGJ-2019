@@ -450,7 +450,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e21dac74b1111341b818ab78a45c01f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxEnergy: 5
+  _maxEnergy: 10
   _fillImage: {fileID: 1974419391}
 --- !u!1 &631928693
 GameObject:
@@ -588,7 +588,10 @@ MonoBehaviour:
   m_crouching: 0
   m_moving: 0
   m_grounded: 0
+  m_shot: 0
   movementSmoothing: 0.05
+  weapon_disk: {fileID: 6708301651566780421, guid: af5a500379060af489ff39e34c2c7d12,
+    type: 3}
 --- !u!1 &873446533
 GameObject:
   m_ObjectHideFlags: 0

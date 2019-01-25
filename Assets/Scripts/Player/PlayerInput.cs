@@ -14,8 +14,11 @@ public class PlayerInput : MonoBehaviour {
 	[SerializeField] private bool m_crouching;
 	[SerializeField] private bool m_moving;
 	[SerializeField] private bool m_grounded;
+	[SerializeField] private bool m_shot;
     private Vector2 m_Velocity = Vector2.zero;
     [SerializeField] private float movementSmoothing = .05f;
+
+	[SerializeField] private GameObject weapon_disk;
 
     private void Start() {
 		if (r2d == null)
@@ -31,6 +34,15 @@ public class PlayerInput : MonoBehaviour {
 		if(Input.GetMouseButtonDown(1)){
 			EnergyBar.Drain(.5f, true);
 		}else if(Input.GetMouseButtonUp(1)){
+			EnergyBar.Drain(0f, false);
+		}
+
+		if (Input.GetAxis("LeftTrigger") > 0.1f) {
+			if (EnergyBar.HasEnergy(1f)) {
+				EnergyBar.Drain(1f, true);
+				Shoot(true);
+			}
+		} else {
 			EnergyBar.Drain(0f, false);
 		}
 	}
@@ -71,13 +83,11 @@ public class PlayerInput : MonoBehaviour {
 			m_crouching = false;
 		}
 
-		if (Input.GetAxis("LeftTrigger") > 0.1f) {
-			Shoot(true);
-		}
-
-		if (Input.GetAxis("RightTrigger") > 0.1f && !m_shot) {
-			Shoot(false);
-			m_shot = true;
+		if (Input.GetAxis("RightTrigger") > 0.1f) {
+			if (!m_shot) {
+				m_shot = true;
+				Shoot(false);
+			}
 		} else {
 			m_shot = false;
 		}
@@ -102,11 +112,14 @@ public class PlayerInput : MonoBehaviour {
 	/// <param name="hold">Is the beam supposed to show?</param>
 	void Shoot(bool hold) {
 		if (hold) { //beam
-
+			r2d.AddForce(m_FacingRight ? Vector2.left * 10f : Vector2.right * 10f);
 		} else { //disk
-			GameObject temp = Instantiate(GameObject.CreatePrimitive(PrimitiveType.Cube));
-			temp.AddComponent<Rigidbody2D>();
-			temp.GetComponent<Rigidbody2D>().velocity = m_FacingRight ? Vector2.right : Vector2.left;
+			if (EnergyBar.HasEnergy(0.5f)) {
+				EnergyBar.Drain(0.5f);
+				GameObject temp = Instantiate(weapon_disk);
+				temp.GetComponent<Rigidbody2D>().velocity = m_FacingRight ? Vector2.right : Vector2.left;
+			}
+
 		}
 	}
 }

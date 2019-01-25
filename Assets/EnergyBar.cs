@@ -39,4 +39,8 @@ public class EnergyBar : MonoBehaviour {
             Drain(drainValue * Time.deltaTime);
         }   
     }
+
+	public static bool HasEnergy(float cost) {
+		return currentEnergy >= cost;
+	}
 }
