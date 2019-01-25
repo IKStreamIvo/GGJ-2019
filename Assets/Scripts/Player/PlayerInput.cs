@@ -14,10 +14,13 @@ public class PlayerInput : MonoBehaviour {
 	[SerializeField] private bool m_crouching;
 	[SerializeField] private bool m_moving;
 	[SerializeField] private bool m_grounded;
-    private Vector2 m_Velocity = Vector2.zero;
-    [SerializeField] private float movementSmoothing = .05f;
+	[SerializeField] private bool m_shot;
+	private Vector2 m_Velocity = Vector2.zero;
+	[SerializeField] private float movementSmoothing = .05f;
+	[SerializeField] private float jumpForce;
+	[SerializeField] private float distFromGround = 2f;
 
-    private void Start() {
+	private void Start() {
 		if (r2d == null)
 			r2d = GetComponent<Rigidbody2D>();
 		if(m_sRend == null)
@@ -29,39 +32,60 @@ public class PlayerInput : MonoBehaviour {
 	// left toggle for axis.
 	// Update is called once per frame
 	void FixedUpdate() {
+		GroundCheck();
 		Vector2 newVelocity = r2d.velocity;
 		float horInput = Input.GetAxis("Horizontal");
-        if(horInput != 0f){
-            newVelocity.x = moveSpeed * horInput;
-            //left or right?
+		float verInput = Input.GetAxis("Vertical");
+		if (horInput != 0f) {
+			newVelocity.x = moveSpeed * horInput;
+			//left or right?
 			bool right = horInput > 0f ? true : false;
 			if (!m_FacingRight && right) {
 				Flip(m_FacingRight);
 				m_FacingRight = true;
-			}else if(m_FacingRight && !right){
+			} else if (m_FacingRight && !right) {
 				Flip(m_FacingRight);
 				m_FacingRight = false;
 			}
 
 			m_moving = true;
-        }else{
-            newVelocity.x = 0f;
+		} else {
+			newVelocity.x = 0f;
 			m_moving = false;
-        }
-        
-        r2d.velocity = Vector2.SmoothDamp(r2d.velocity, newVelocity, ref m_Velocity, movementSmoothing);
+		}
 
-		if (Input.GetAxis("Vertical") < -0.2f) { //crouching
+		r2d.velocity = Vector2.SmoothDamp(r2d.velocity, newVelocity, ref m_Velocity, movementSmoothing);
+
+		if (verInput < -0.2f) { //crouching
 			m_crouching = true;
 			//DoCrouching();
 		} else {
 			m_crouching = false;
 		}
+
+		if (Input.GetButtonDown("Jump")) {
+			if (m_grounded) {
+				r2d.AddForce(new Vector2(0f, jumpForce));
+				m_grounded = false;
+			}
+		}
+
+		if(Input.GetAxis("LeftTrigger") > 0.1f) {
+			Shoot(true);
+		}
+
+		if(Input.GetAxis("RightTrigger") > 0.1f && !m_shot) {
+			Shoot(false);
+			m_shot = true;
+		} else {
+			m_shot = false;
+		}
 	}
 
-	private void GroundCheck(){
+	private void GroundCheck() {
 		RaycastHit2D hit2D;
-		if (Physics2D.Raycast(transform.position, transform.TransformDirection(Vector2.down), 2f, 1 << 9)) {
+		if (Physics2D.Raycast(transform.position, Vector2.down, distFromGround, 1 << 9)) {
+			Debug.DrawRay(transform.position, Vector2.down * distFromGround, Color.red);
 			m_grounded = true;
 		} else {
 			m_grounded = false;
@@ -70,5 +94,19 @@ public class PlayerInput : MonoBehaviour {
 
 	void Flip(bool toRight) {
 			m_sRend.flipX = toRight;
+	}
+
+	/// <summary>
+	/// Shooting
+	/// </summary>
+	/// <param name="hold">Is the beam supposed to show?</param>
+	void Shoot(bool hold) {
+		if (hold) { //beam
+
+		} else { //disk
+			GameObject temp = Instantiate(GameObject.CreatePrimitive(PrimitiveType.Cube));
+			temp.AddComponent<Rigidbody2D>();
+			temp.GetComponent<Rigidbody2D>().velocity = m_FacingRight ? Vector2.right : Vector2.left;
+		}
 	}
 }
