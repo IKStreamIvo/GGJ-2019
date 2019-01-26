@@ -9,7 +9,7 @@ public class SoundEffects : MonoBehaviour {
 
     //This corresponds to the indexes of 'soundEffects' array
     public enum Clips {
-        LaserBeam, ShootDisc, Demon1, Demon2
+        LaserBeam, ShootDisc, Demon1, Demon2, Ping, Dead1, Dead2, Hurt1, Hurt2, Hurt3, Hurt4, Footstep
     }
 
     private void Start() {
