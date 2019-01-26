@@ -43,4 +43,11 @@ public class EnergyBar : MonoBehaviour {
 	public static bool HasEnergy(float cost) {
 		return currentEnergy >= cost;
 	}
+
+	public static bool EnergyFull() {
+		if(currentEnergy >= maxEnergy) {
+			return true;
+		}
+		return false;
+	}
 }
