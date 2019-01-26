@@ -34,6 +34,8 @@ public class PlayerInput : MonoBehaviour {
     private bool isAiming;
     private Transform targetTelekinesis;
     private Vector3 targetTelekinesisOffset;
+    private Vector2 newVelocity;
+    private bool doJump;
 
     private void Start() {
 		if (r2d == null)
@@ -45,34 +47,10 @@ public class PlayerInput : MonoBehaviour {
 	}
 
 	private void Update() {
-		if(Input.GetMouseButtonDown(0)){
-			EnergyBar.Drain(m_costDisk);
-		}
-		if(Input.GetMouseButtonDown(1)){
-			EnergyBar.Drain(m_costBeam, true);
-		}else if(Input.GetMouseButtonUp(1)){
-			EnergyBar.Drain(m_costBeam, false);
-		}
-
-		if (Input.GetAxis("LeftTrigger") > 0.1f) { //beam
-				Shoot(true);
-		} else {
-			EnergyBar.Drain(0f, false);
-			m_lRend.SetPosition(0, handPoint.position);
-			m_lRend.SetPosition(1, handPoint.position);
-		}
-	}
-
-	// a jumps
-	// b crouch
-	// left toggle for axis.
-	// Update is called once per frame
-	void FixedUpdate() {
-		Aiming();
 		GroundCheck();
-		Telekinesis();
 
-		Vector2 newVelocity = r2d.velocity;
+		//Movement
+		newVelocity = r2d.velocity;
 		float horInput = Input.GetAxis("Horizontal");
         if(horInput != 0f){
             newVelocity.x = moveSpeed * horInput;
@@ -92,20 +70,35 @@ public class PlayerInput : MonoBehaviour {
             newVelocity.x = 0f;
 			m_moving = false;
         }
+		//Jumping
+        if(Input.GetButton("Jump") && m_grounded){
+			doJump = true;
+		}else{
+			doJump = false;
+		}
         
-        r2d.velocity = Vector2.SmoothDamp(r2d.velocity, newVelocity, ref m_Velocity, movementSmoothing);
+		//Abilities
+		Aiming();
+		///Meditating
+        if (Input.GetKey(KeyCode.Joystick1Button3)){
+            if (!EnergyBar.EnergyFull()) { //show meditate animation.
+                EnergyBar.Drain(-1f, true);
+            }
+        } else if (Input.GetKeyUp(KeyCode.Joystick1Button3)) { //stop meditate animation.
+            EnergyBar.Drain(0f, false);
+        }
 
-		if (Input.GetAxis("Vertical") < -0.2f) { //crouching
-			m_crouching = true;
-			//DoCrouching();
+		///Lazors
+		if (Input.GetAxis("LeftTrigger") > 0.1f) {
+			Shoot(true);
+			EnergyBar.Drain(.5f, true);
 		} else {
-			m_crouching = false;
+			EnergyBar.Drain(0f, false);
+			m_lRend.SetPosition(0, handPoint.position);
+			m_lRend.SetPosition(1, handPoint.position);
 		}
 
-		if(Input.GetButtonDown("Jump") && m_grounded){
-			r2d.AddForce(new Vector2(0f, jumpForce));
-		}
-
+		///Discs
 		if (Input.GetAxis("RightTrigger") > 0.1f) {
 			if (!m_shot) {
 				m_shot = true;
@@ -114,16 +107,24 @@ public class PlayerInput : MonoBehaviour {
 		} else {
 			m_shot = false;
 		}
+	}
 
-		//Meditating
-        if (Input.GetKey(KeyCode.Joystick1Button3)){
-            if (!EnergyBar.EnergyFull()) { //show meditate animation.
+	
 
-                EnergyBar.Drain(-1f, true);
-            }
-        } else if (Input.GetKeyUp(KeyCode.Joystick1Button3)) { //stop meditate animation.
-            EnergyBar.Drain(0f, false);
-        }
+	void FixedUpdate() {
+		Move();
+		Telekinesis();
+	}
+
+	#region CharacterController
+	// a jumps
+	// b crouch
+	// left toggle for axis.
+	private void Move(){
+		r2d.velocity = Vector2.SmoothDamp(r2d.velocity, newVelocity, ref m_Velocity, movementSmoothing);
+		if(doJump){
+			r2d.AddForce(new Vector2(0f, jumpForce));
+		}
 	}
 
 	private void GroundCheck(){
@@ -136,18 +137,40 @@ public class PlayerInput : MonoBehaviour {
 		}
 	}
 
-	void Flip(bool toRight) {
-		//m_sRend.flipX = toRight;
+	private void Flip(bool toRight) {
 		Vector3 scl = transform.localScale;
 		scl.x *= -1;
 		transform.localScale = scl;
 	}
 
-	/// <summary>
-    /// Shooting
-    /// </summary>
-    /// <param name="hold">Is the beam supposed to show?</param>
-    void Shoot(bool hold) {
+	private void Aiming(){
+		float hor = Input.GetAxis("AimHor");
+		float ver = -Input.GetAxis("AimVer") * (m_FacingRight ? 1 : -1);
+		Vector3 targetRot = new Vector3 (0f, 0f, Mathf.Atan2 (ver, hor) * 180 / Mathf.PI);
+		if(hor == 0f && ver == 0f){
+			targetRot = new Vector3(0f, 0f, 180f);
+		}
+		arm.localEulerAngles = -targetRot;
+
+		if(targetRot.z < 0f && !m_FacingRight){
+			m_FacingRight = true;
+			Flip(m_FacingRight);
+		}else if(targetRot.z < 0f && m_FacingRight){
+			m_FacingRight = false;
+			Flip(m_FacingRight);
+		}
+		
+		if(hor != 0f || ver != 0f){
+			aim = -(arm.position - handPoint.position).normalized;
+			isAiming = true;
+		}else{
+			isAiming = false;
+		}
+	}
+	#endregion
+
+	#region Abilities
+	private void Shoot(bool hold) {
 		if(!isAiming) return;
         if (hold) { //beam
             RaycastHit2D hit = Physics2D.Raycast(handPoint.position, aim, Mathf.Infinity, ~(1<<10));
@@ -179,6 +202,7 @@ public class PlayerInput : MonoBehaviour {
 
 				targetTelekinesisOffset = targetTelekinesis.position - transform.position;
 
+				targetTelekinesis.SetParent(transform, true);
 				m_lRend.SetPosition(0, handPoint.position);
 				m_lRend.SetPosition(1, targetTelekinesis.position);
 			}
@@ -199,29 +223,5 @@ public class PlayerInput : MonoBehaviour {
 			targetTelekinesis.parent = arm;
 		}
 	}
-
-	private void Aiming(){
-		float hor = Input.GetAxis("AimHor");
-		float ver = -Input.GetAxis("AimVer") * (m_FacingRight ? 1 : -1);
-		Vector3 targetRot = new Vector3 (0f, 0f, Mathf.Atan2 (ver, hor) * 180 / Mathf.PI);
-		if(hor == 0f && ver == 0f){
-			targetRot = new Vector3(0f, 0f, 180f);
-		}
-		arm.localEulerAngles = -targetRot;
-
-		if(targetRot.z < 0f && !m_FacingRight){
-			m_FacingRight = true;
-			Flip(m_FacingRight);
-		}else if(targetRot.z < 0f && m_FacingRight){
-			m_FacingRight = false;
-			Flip(m_FacingRight);
-		}
-
-		if(hor != 0f && ver != 0f){
-			aim = -(arm.position - handPoint.position).normalized;
-			isAiming = true;
-		}else{
-			isAiming = false;
-		}
-	}
+	#endregion
 }
