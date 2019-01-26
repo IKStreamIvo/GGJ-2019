@@ -31,6 +31,8 @@ public class PlayerInput : MonoBehaviour {
 	private Vector2 aim;
     [SerializeField] private float groundCheckDistance;
     private bool isAiming;
+    private Transform targetTelekinesis;
+    private Vector3 targetTelekinesisOffset;
 
     private void Start() {
 		if (r2d == null)
@@ -146,14 +148,14 @@ public class PlayerInput : MonoBehaviour {
     void Shoot(bool hold) {
 		if(!isAiming) return;
         if (hold) { //beam
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, aim, Mathf.Infinity, ~(1<<10));
-			if (EnergyBar.HasEnergy(m_costBeam)) {
-				EnergyBar.Drain(m_costBeam, true);
-				if (hit.collider != null) {
-					r2d.AddForce(-aim * m_beamForce);
-					m_lRend.SetPosition(0, handPoint.position);
-				    m_lRend.SetPosition(1, hit.point);
-				}
+            RaycastHit2D hit = Physics2D.Raycast(handPoint.position, aim, Mathf.Infinity, ~(1<<10));
+            if(hit.collider != null) {
+				r2d.AddForce(-aim * 10f);
+                m_lRend.SetPosition(0, handPoint.position);
+                m_lRend.SetPosition(1, hit.point);
+            }else{
+				m_lRend.SetPosition(0, handPoint.position);
+                m_lRend.SetPosition(1, handPoint.position);
 			}
         } else { //disk
             if (EnergyBar.HasEnergy(m_costDisk)) {
@@ -168,7 +170,21 @@ public class PlayerInput : MonoBehaviour {
 
 	private void Telekinesis(){
 		if(Input.GetButtonDown("Fire3")){
+			RaycastHit2D hit = Physics2D.Raycast(handPoint.position, aim, Mathf.Infinity, 1<<12);
+			if(hit.collider != null){
+				targetTelekinesis = hit.collider.transform;
+				targetTelekinesisOffset = targetTelekinesis.position - transform.position;
+				m_lRend.SetPosition(0, handPoint.position);
+				m_lRend.SetPosition(1, targetTelekinesis.position);
+			}
+		}else if(Input.GetButtonUp("Fire3") && targetTelekinesis != null){
+			targetTelekinesis = null;
+			m_lRend.SetPosition(0, handPoint.position);
+			m_lRend.SetPosition(1, handPoint.position);
+		}
 
+		if(targetTelekinesis != null){
+			targetTelekinesis.position = transform.position + (Vector3)(aim*targetTelekinesisOffset);
 		}
 	}
 
