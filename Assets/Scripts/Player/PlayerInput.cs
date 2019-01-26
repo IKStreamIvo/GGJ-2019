@@ -58,11 +58,15 @@ public class PlayerInput : MonoBehaviour {
             //left or right?
 			bool right = horInput > 0f ? true : false;
 			if (!m_FacingRight && right) {
-				Flip(m_FacingRight);
-				m_FacingRight = true;
+				
+					Flip(m_FacingRight);
+					m_FacingRight = true;
+				
 			}else if(m_FacingRight && !right){
-				Flip(m_FacingRight);
-				m_FacingRight = false;
+				
+					Flip(m_FacingRight);
+					m_FacingRight = false;
+				
 			}
 
 			m_moving = true;
@@ -157,13 +161,14 @@ public class PlayerInput : MonoBehaviour {
 		}
 		arm.localEulerAngles = -targetRot;
 
+		/*
 		if(targetRot.z < 0f && !m_FacingRight){
 			m_FacingRight = true;
-			Flip(m_FacingRight);
+			Flip(!m_FacingRight);
 		}else if(targetRot.z < 0f && m_FacingRight){
 			m_FacingRight = false;
-			Flip(m_FacingRight);
-		}
+			Flip(!m_FacingRight);
+		}*/
 		
 		if(hor != 0f || ver != 0f){
 			aim = -(arm.position - handPoint.position).normalized;
@@ -180,7 +185,7 @@ public class PlayerInput : MonoBehaviour {
         if (hold) { //beam
             RaycastHit2D hit = Physics2D.Raycast(handPoint.position, aim, Mathf.Infinity, ~(1<<10));
             if(hit.collider != null) {
-				r2d.AddForce(-aim * 10f);
+				r2d.AddForce(-aim * m_beamForce);
                 m_lRend.SetPosition(0, handPoint.position);
                 m_lRend.SetPosition(1, hit.point);
             }else{
