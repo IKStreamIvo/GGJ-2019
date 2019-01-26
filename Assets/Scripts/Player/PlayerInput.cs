@@ -61,40 +61,45 @@ public class PlayerInput : MonoBehaviour {
             //left or right?
 			bool right = horInput > 0f ? true : false;
 			if (!m_FacingRight && right) {
-				
-					Flip(m_FacingRight);
-					m_FacingRight = true;
-				
+				Flip(m_FacingRight);
+				m_FacingRight = true;
 			}else if(m_FacingRight && !right){
-				
-					Flip(m_FacingRight);
-					m_FacingRight = false;
-				
+				Flip(m_FacingRight);
+				m_FacingRight = false;
 			}
 			m_moving = true;
-			animator.SetBool("Run", m_moving);
-			animator.SetBool("Idle", false);
 		} else{
             newVelocity.x = 0f;
 			m_moving = false;
-			animator.SetBool("Run", m_moving);
 		}
+		
+
 		//Jumping
         if(Input.GetButton("Jump") && m_grounded){
 			doJump = true;
-			if (!animator.GetBool("Jump")) {
-				animator.SetBool("Jump", doJump);
-				animator.SetBool("Idle", !doJump);
-			}
+			// if (!animator.GetBool("Jump")) {
+			// 	animator.SetBool("Jump", doJump);
+			// 	animator.SetBool("Idle", !doJump);
+			// }
 		}else{
 			doJump = false;
-			if (animator.GetBool("Jump")) {
-				animator.SetBool("Jump", doJump);
-			} else {
-				animator.SetBool("Idle", !doJump);
-			}
+			// if (animator.GetBool("Jump")) {
+			// 	animator.SetBool("Jump", doJump);
+			// } else {
+			// 	animator.SetBool("Idle", !doJump);
+			// }
 		}
         
+		//Animation
+		animator.SetBool("Jump", !m_grounded);
+		animator.SetBool("Run", m_moving);
+		animator.SetBool("Idle", !m_moving && m_grounded);
+		if(animator.GetBool("Idle")){
+			animator.SetFloat("5Second Limit", animator.GetFloat("5Second Limit") + Time.deltaTime);
+		}else{
+			animator.SetFloat("5Second Limit", 0f);
+		}
+
 		//Abilities
 		Aiming();
 		///Meditating

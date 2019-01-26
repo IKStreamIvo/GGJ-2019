@@ -378,6 +378,7 @@ GameObject:
   - component: {fileID: 512152293}
   - component: {fileID: 512152297}
   - component: {fileID: 512152298}
+  - component: {fileID: 512152299}
   m_Layer: 11
   m_Name: Familiar
   m_TagString: Untagged
@@ -523,6 +524,21 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &512152299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 512152292}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -900027084, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 1, g: 0, b: 0, a: 1}
+  m_EffectDistance: {x: 1, y: -1}
+  m_UseGraphicAlpha: 1
 --- !u!1 &534669902
 GameObject:
   m_ObjectHideFlags: 0
@@ -535,6 +551,7 @@ GameObject:
   - component: {fileID: 534669904}
   - component: {fileID: 534669903}
   - component: {fileID: 534669906}
+  - component: {fileID: 534669907}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -621,6 +638,23 @@ MonoBehaviour:
   target: {fileID: 631928697}
   followSpeed: 8
   followOffset: {x: 0, y: 2}
+--- !u!114 &534669907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 534669902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 996ee7d4e8c389643908c6fc521a716e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _soundEffects:
+  - {fileID: 8300000, guid: 83cda1145c7588549917185380f54e3e, type: 3}
+  - {fileID: 8300000, guid: dd043142a71c4f149b7fe5e615498df9, type: 3}
+  - {fileID: 8300000, guid: a39a9a16039f7f649a7f23123d7990b2, type: 3}
+  - {fileID: 8300000, guid: a03194d6c985d7d448ad78603ee1d7e5, type: 3}
 --- !u!1 &592355721
 GameObject:
   m_ObjectHideFlags: 0

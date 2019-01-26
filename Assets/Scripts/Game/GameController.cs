@@ -5,9 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
-	[SerializeField] private static GameController gCont;
+	public static GameController gCont;
 
-    // Start is called before the first frame update
     void Start()
     {
 		gCont = this;
@@ -19,5 +18,10 @@ public class GameController : MonoBehaviour
 
 	void LoadNewScene(string sceneToLoad) {
 		SceneManager.LoadScene(sceneToLoad, LoadSceneMode.Single);
+	}
+
+	public void CoroutinePasser(IEnumerator func)
+    {
+        StartCoroutine(func);
 	}
 }
