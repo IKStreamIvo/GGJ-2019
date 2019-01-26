@@ -148,7 +148,6 @@ public class PlayerInput : MonoBehaviour {
     void Shoot(bool hold) {
 		if(!isAiming) return;
         if (hold) { //beam
-<<<<<<< HEAD
             RaycastHit2D hit = Physics2D.Raycast(handPoint.position, aim, Mathf.Infinity, ~(1<<10));
             if(hit.collider != null) {
 				r2d.AddForce(-aim * 10f);
@@ -157,16 +156,6 @@ public class PlayerInput : MonoBehaviour {
             }else{
 				m_lRend.SetPosition(0, handPoint.position);
                 m_lRend.SetPosition(1, handPoint.position);
-=======
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, aim, Mathf.Infinity, ~(1<<10));
-			if (EnergyBar.HasEnergy(m_costBeam)) {
-				EnergyBar.Drain(m_costBeam, true);
-				if (hit.collider != null) {
-					r2d.AddForce(-aim * m_beamForce);
-					m_lRend.SetPosition(0, handPoint.position);
-				    m_lRend.SetPosition(1, hit.point);
-				}
->>>>>>> e8301341ed27777282366e1c1f06eb6cb72ae894
 			}
         } else { //disk
             if (EnergyBar.HasEnergy(m_costDisk)) {
