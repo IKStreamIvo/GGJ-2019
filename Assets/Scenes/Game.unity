@@ -659,7 +659,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &1020949069
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -763,7 +763,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &1048535079
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1384,6 +1384,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 342917397557353594, guid: 53a8aaf9ea72fcb4bb45fb3bc494ecde,
+        type: 3}
+      propertyPath: jumpForce
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 342917397557353591, guid: 53a8aaf9ea72fcb4bb45fb3bc494ecde,
+        type: 3}
+      propertyPath: m_GravityScale
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4390532543033938982, guid: 53a8aaf9ea72fcb4bb45fb3bc494ecde,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 4.05
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 53a8aaf9ea72fcb4bb45fb3bc494ecde, type: 3}
