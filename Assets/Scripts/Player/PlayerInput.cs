@@ -69,6 +69,7 @@ public class PlayerInput : MonoBehaviour {
 	void FixedUpdate() {
 		Aiming();
 		GroundCheck();
+		Telekinesis();
 
 		Vector2 newVelocity = r2d.velocity;
 		float horInput = Input.GetAxis("Horizontal");
@@ -169,22 +170,30 @@ public class PlayerInput : MonoBehaviour {
     }
 
 	private void Telekinesis(){
-		if(Input.GetButtonDown("Fire3")){
+		if(Input.GetButtonDown("Telekinesis")){
 			RaycastHit2D hit = Physics2D.Raycast(handPoint.position, aim, Mathf.Infinity, 1<<12);
 			if(hit.collider != null){
 				targetTelekinesis = hit.collider.transform;
+				targetTelekinesis.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
+
 				targetTelekinesisOffset = targetTelekinesis.position - transform.position;
+
 				m_lRend.SetPosition(0, handPoint.position);
 				m_lRend.SetPosition(1, targetTelekinesis.position);
 			}
-		}else if(Input.GetButtonUp("Fire3") && targetTelekinesis != null){
+		}else if(Input.GetButtonUp("Telekinesis") && targetTelekinesis != null){
+			targetTelekinesis.parent = null;
+			targetTelekinesis.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
+
 			targetTelekinesis = null;
+
 			m_lRend.SetPosition(0, handPoint.position);
 			m_lRend.SetPosition(1, handPoint.position);
 		}
 
 		if(targetTelekinesis != null){
-			targetTelekinesis.position = transform.position + (Vector3)(aim*targetTelekinesisOffset);
+			//targetTelekinesis.position = transform.position + (Vector3)(aim*targetTelekinesisOffset);
+			targetTelekinesis.parent = arm;
 		}
 	}
 

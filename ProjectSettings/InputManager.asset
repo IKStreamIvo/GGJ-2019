@@ -246,11 +246,11 @@ InputManager:
     axis: 9
     joyNum: 1
   - serializedVersion: 3
-    m_Name: Fire3
+    m_Name: Telekinesis
     descriptiveName: 
     descriptiveNegativeName: 
     negativeButton: 
-    positiveButton: joystick button 2
+    positiveButton: joystick button 1
     altNegativeButton: 
     altPositiveButton: 
     gravity: 1000
