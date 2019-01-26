@@ -8,6 +8,7 @@ public class PlayerInput : MonoBehaviour {
 	Rigidbody2D r2d;
 	SpriteRenderer m_sRend;
     LineRenderer m_lRend;
+	Animator animator;
 
 	public float moveSpeed;
 
@@ -44,6 +45,8 @@ public class PlayerInput : MonoBehaviour {
 			m_sRend = GetComponent<SpriteRenderer>();
 		if (m_lRend == null)
             m_lRend = GetComponent<LineRenderer>();
+		if (animator == null)
+			animator = GetComponent<Animator>();
 	}
 
 	private void Update() {
@@ -77,8 +80,17 @@ public class PlayerInput : MonoBehaviour {
 		//Jumping
         if(Input.GetButton("Jump") && m_grounded){
 			doJump = true;
+			if (!animator.GetBool("Jump")) {
+				animator.SetBool("Jump", doJump);
+				animator.SetBool("Idle", !doJump);
+			}
 		}else{
 			doJump = false;
+			Debug.Log("joe");
+			animator.SetBool("Idle", !doJump);
+			if (animator.GetBool("Jump")) {
+				animator.SetBool("Jump", doJump);
+			}
 		}
         
 		//Abilities
@@ -131,8 +143,10 @@ public class PlayerInput : MonoBehaviour {
 	// left toggle for axis.
 	private void Move(){
 		r2d.velocity = Vector2.SmoothDamp(r2d.velocity, newVelocity, ref m_Velocity, movementSmoothing);
-		if(doJump){
+		if (doJump) {
 			r2d.AddForce(new Vector2(0f, jumpForce));
+		} else {
+
 		}
 	}
 
