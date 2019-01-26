@@ -86,7 +86,6 @@ public class PlayerInput : MonoBehaviour {
 			}
 		}else{
 			doJump = false;
-			Debug.Log("joe");
 			animator.SetBool("Idle", !doJump);
 			if (animator.GetBool("Jump")) {
 				animator.SetBool("Jump", doJump);
