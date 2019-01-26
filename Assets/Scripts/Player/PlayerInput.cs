@@ -18,6 +18,7 @@ public class PlayerInput : MonoBehaviour {
 	[SerializeField] private bool m_shot;
     private Vector2 m_Velocity = Vector2.zero;
     [SerializeField] private float movementSmoothing = .05f;
+    [SerializeField] private float jumpForce = 500f;
 
 	[SerializeField] private GameObject weapon_disk;
 	[SerializeField] private Transform arm;
@@ -25,6 +26,7 @@ public class PlayerInput : MonoBehaviour {
     [SerializeField] private float m_bulletSpeed;
 
 	private Vector2 aim;
+    [SerializeField] private float groundCheckDistance;
 
     private void Start() {
 		if (r2d == null)
@@ -63,6 +65,7 @@ public class PlayerInput : MonoBehaviour {
 	// Update is called once per frame
 	void FixedUpdate() {
 		Aiming();
+		GroundCheck();
 
 		Vector2 newVelocity = r2d.velocity;
 		float horInput = Input.GetAxis("Horizontal");
@@ -93,6 +96,10 @@ public class PlayerInput : MonoBehaviour {
 			m_crouching = false;
 		}
 
+		if(Input.GetButtonDown("Jump") && m_grounded){
+			r2d.AddForce(new Vector2(0f, jumpForce));
+		}
+
 		if (Input.GetAxis("RightTrigger") > 0.1f) {
 			if (!m_shot) {
 				m_shot = true;
@@ -114,7 +121,8 @@ public class PlayerInput : MonoBehaviour {
 
 	private void GroundCheck(){
 		RaycastHit2D hit2D;
-		if (Physics2D.Raycast(transform.position, transform.TransformDirection(Vector2.down), 2f, 1 << 9)) {
+		Debug.DrawRay(transform.position, Vector2.down * groundCheckDistance, Color.red);
+		if (Physics2D.Raycast(transform.position, transform.TransformDirection(Vector2.down), groundCheckDistance, 1 << 9)) {
 			m_grounded = true;
 		} else {
 			m_grounded = false;
