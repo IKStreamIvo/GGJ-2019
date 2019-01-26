@@ -24,6 +24,9 @@ public class PlayerInput : MonoBehaviour {
 	[SerializeField] private Transform arm;
 	[SerializeField] private Transform handPoint;
     [SerializeField] private float m_bulletSpeed;
+	[SerializeField] private float m_beamForce;
+	[SerializeField] private float m_costBeam;
+	[SerializeField] private float m_costDisk;
 
 	private Vector2 aim;
     [SerializeField] private float groundCheckDistance;
@@ -42,19 +45,16 @@ public class PlayerInput : MonoBehaviour {
 
 	private void Update() {
 		if(Input.GetMouseButtonDown(0)){
-			EnergyBar.Drain(.5f);
+			EnergyBar.Drain(m_costDisk);
 		}
 		if(Input.GetMouseButtonDown(1)){
-			EnergyBar.Drain(.5f, true);
+			EnergyBar.Drain(m_costBeam, true);
 		}else if(Input.GetMouseButtonUp(1)){
-			EnergyBar.Drain(0f, false);
+			EnergyBar.Drain(m_costBeam, false);
 		}
 
-		if (Input.GetAxis("LeftTrigger") > 0.1f) {
-			if (EnergyBar.HasEnergy(1f)) {
-				EnergyBar.Drain(1f, true);
+		if (Input.GetAxis("LeftTrigger") > 0.1f) { //beam
 				Shoot(true);
-			}
 		} else {
 			EnergyBar.Drain(0f, false);
 			m_lRend.SetPosition(0, handPoint.position);
@@ -74,6 +74,7 @@ public class PlayerInput : MonoBehaviour {
 		float horInput = Input.GetAxis("Horizontal");
         if(horInput != 0f){
             newVelocity.x = moveSpeed * horInput;
+            
             //left or right?
 			bool right = horInput > 0f ? true : false;
 			if (!m_FacingRight && right) {
@@ -115,7 +116,8 @@ public class PlayerInput : MonoBehaviour {
 		//Meditating
         if (Input.GetKey(KeyCode.Joystick1Button3)){
             if (!EnergyBar.EnergyFull()) { //show meditate animation.
-                EnergyBar.Drain(-0.5f, true);
+
+                EnergyBar.Drain(-1f, true);
             }
         } else if (Input.GetKeyUp(KeyCode.Joystick1Button3)) { //stop meditate animation.
             EnergyBar.Drain(0f, false);
@@ -146,6 +148,7 @@ public class PlayerInput : MonoBehaviour {
     void Shoot(bool hold) {
 		if(!isAiming) return;
         if (hold) { //beam
+<<<<<<< HEAD
             RaycastHit2D hit = Physics2D.Raycast(handPoint.position, aim, Mathf.Infinity, ~(1<<10));
             if(hit.collider != null) {
 				r2d.AddForce(-aim * 10f);
@@ -154,15 +157,25 @@ public class PlayerInput : MonoBehaviour {
             }else{
 				m_lRend.SetPosition(0, handPoint.position);
                 m_lRend.SetPosition(1, handPoint.position);
+=======
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, aim, Mathf.Infinity, ~(1<<10));
+			if (EnergyBar.HasEnergy(m_costBeam)) {
+				EnergyBar.Drain(m_costBeam, true);
+				if (hit.collider != null) {
+					r2d.AddForce(-aim * m_beamForce);
+					m_lRend.SetPosition(0, handPoint.position);
+				    m_lRend.SetPosition(1, hit.point);
+				}
+>>>>>>> e8301341ed27777282366e1c1f06eb6cb72ae894
 			}
         } else { //disk
-            if (EnergyBar.HasEnergy(0.5f)) {
-                EnergyBar.Drain(0.5f);
+            if (EnergyBar.HasEnergy(m_costDisk)) {
+                EnergyBar.Drain(m_costDisk);
                 GameObject temp = Instantiate(weapon_disk, handPoint.position, Quaternion.identity);
                 temp.GetComponent<Rigidbody2D>().velocity = aim * m_bulletSpeed;
             }
-			m_lRend.SetPosition(0, handPoint.position);
-			m_lRend.SetPosition(1, handPoint.position);
+			//m_lRend.SetPosition(0, handPoint.position);
+			//m_lRend.SetPosition(1, handPoint.position);
         }
     }
 

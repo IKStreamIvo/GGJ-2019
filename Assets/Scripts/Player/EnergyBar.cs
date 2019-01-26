@@ -8,14 +8,17 @@ public class EnergyBar : MonoBehaviour {
     private static float currentEnergy;
     private static float maxEnergy;
     [SerializeField] private Image _fillImage;
+	[SerializeField] private Text _fillText;
 
     private static Image fillImage;
+	private static Text fillText;
     private static bool continuousDrain;
     private static float drainValue;
 
     private void Start() {
         fillImage = _fillImage;
         maxEnergy = _maxEnergy;
+		fillText = _fillText;
 
         currentEnergy = maxEnergy;
     }
@@ -32,6 +35,7 @@ public class EnergyBar : MonoBehaviour {
     private static void UpdateUI(){
         float value = currentEnergy / maxEnergy;
         fillImage.fillAmount = value;
+		fillText.text = "" + value;
     }
 
     private void Update() {
