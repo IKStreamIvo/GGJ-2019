@@ -23,6 +23,7 @@ public class PlayerInput : MonoBehaviour {
 	[SerializeField] private Transform arm;
 	[SerializeField] private Transform handPoint;
     [SerializeField] private float m_bulletSpeed;
+	[SerializeField] private float m_beamForce;
 
 	private Vector2 aim;
 
@@ -68,15 +69,6 @@ public class PlayerInput : MonoBehaviour {
 		float horInput = Input.GetAxis("Horizontal");
         if(horInput != 0f){
             newVelocity.x = moveSpeed * horInput;
-            //left or right?
-			/*bool right = horInput > 0f ? true : false;
-			if (!m_FacingRight && right) {
-				Flip(m_FacingRight);
-				m_FacingRight = true;
-			}else if(m_FacingRight && !right){
-				Flip(m_FacingRight);
-				m_FacingRight = false;
-			}*/
 
 			m_moving = true;
         }else{
@@ -105,7 +97,7 @@ public class PlayerInput : MonoBehaviour {
 		//Meditating
         if (Input.GetKey(KeyCode.Joystick1Button3)){
             if (!EnergyBar.EnergyFull()) { //show meditate animation.
-                EnergyBar.Drain(-0.5f, true);
+                EnergyBar.Drain(-1f, true);
             }
         } else if (Input.GetKeyUp(KeyCode.Joystick1Button3)) { //stop meditate animation.
             EnergyBar.Drain(0f, false);
@@ -136,8 +128,9 @@ public class PlayerInput : MonoBehaviour {
         if (hold) { //beam
             RaycastHit2D hit = Physics2D.Raycast(transform.position, aim, Mathf.Infinity, ~(1<<10));
             if(hit.collider != null) {
-				r2d.AddForce(-aim * 10f);
-                m_lRend.SetPosition(0, handPoint.position);
+				
+				newVelocity.x = -aim * m_beamForce;
+				m_lRend.SetPosition(0, handPoint.position);
                 m_lRend.SetPosition(1, hit.point);
             }else{
 				m_lRend.SetPosition(0, handPoint.position);
