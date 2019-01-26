@@ -25,6 +25,7 @@ public class PlayerInput : MonoBehaviour {
 	[SerializeField] private Transform handPoint;
     [SerializeField] private float m_bulletSpeed;
 	[SerializeField] private float m_beamForce;
+	[SerializeField] private float m_pushForce;
 	[SerializeField] private float m_costBeam;
 	[SerializeField] private float m_costDisk;
 
@@ -185,6 +186,8 @@ public class PlayerInput : MonoBehaviour {
 			targetTelekinesis.parent = null;
 			targetTelekinesis.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
 
+			targetTelekinesis.GetComponent<Rigidbody2D>().velocity = (aim * m_pushForce);
+			
 			targetTelekinesis = null;
 
 			m_lRend.SetPosition(0, handPoint.position);
