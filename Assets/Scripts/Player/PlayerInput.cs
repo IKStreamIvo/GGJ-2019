@@ -25,6 +25,8 @@ public class PlayerInput : MonoBehaviour {
 	[SerializeField] private Transform handPoint;
     [SerializeField] private float m_bulletSpeed;
 	[SerializeField] private float m_beamForce;
+	[SerializeField] private float m_costBeam;
+	[SerializeField] private float m_costDisk;
 
 	private Vector2 aim;
     [SerializeField] private float groundCheckDistance;
@@ -40,19 +42,16 @@ public class PlayerInput : MonoBehaviour {
 
 	private void Update() {
 		if(Input.GetMouseButtonDown(0)){
-			EnergyBar.Drain(.5f);
+			EnergyBar.Drain(m_costDisk);
 		}
 		if(Input.GetMouseButtonDown(1)){
-			EnergyBar.Drain(.5f, true);
+			EnergyBar.Drain(m_costBeam, true);
 		}else if(Input.GetMouseButtonUp(1)){
-			EnergyBar.Drain(0f, false);
+			EnergyBar.Drain(m_costBeam, false);
 		}
 
-		if (Input.GetAxis("LeftTrigger") > 0.1f) {
-			if (EnergyBar.HasEnergy(1f)) {
-				EnergyBar.Drain(1f, true);
+		if (Input.GetAxis("LeftTrigger") > 0.1f) { //beam
 				Shoot(true);
-			}
 		} else {
 			EnergyBar.Drain(0f, false);
 			m_lRend.SetPosition(0, handPoint.position);
@@ -135,23 +134,22 @@ public class PlayerInput : MonoBehaviour {
     void Shoot(bool hold) {
         if (hold) { //beam
             RaycastHit2D hit = Physics2D.Raycast(transform.position, aim, Mathf.Infinity, ~(1<<10));
-            if(hit.collider != null) {
-				
-				newVelocity.x = -aim * m_beamForce;
-				m_lRend.SetPosition(0, handPoint.position);
-                m_lRend.SetPosition(1, hit.point);
-            }else{
-				m_lRend.SetPosition(0, handPoint.position);
-                m_lRend.SetPosition(1, handPoint.position);
+			if (EnergyBar.HasEnergy(m_costBeam)) {
+				EnergyBar.Drain(m_costBeam, true);
+				if (hit.collider != null) {
+					r2d.AddForce(-aim * m_beamForce);
+					m_lRend.SetPosition(0, handPoint.position);
+				    m_lRend.SetPosition(1, hit.point);
+				}
 			}
         } else { //disk
-            if (EnergyBar.HasEnergy(0.5f)) {
-                EnergyBar.Drain(0.5f);
+            if (EnergyBar.HasEnergy(m_costDisk)) {
+                EnergyBar.Drain(m_costDisk);
                 GameObject temp = Instantiate(weapon_disk, handPoint.position, Quaternion.identity);
                 temp.GetComponent<Rigidbody2D>().velocity = aim * m_bulletSpeed;
             }
-			m_lRend.SetPosition(0, handPoint.position);
-			m_lRend.SetPosition(1, handPoint.position);
+			//m_lRend.SetPosition(0, handPoint.position);
+			//m_lRend.SetPosition(1, handPoint.position);
         }
     }
 

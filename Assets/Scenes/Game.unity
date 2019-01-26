@@ -414,7 +414,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 631928697}
-  followSpeed: 5
+  followSpeed: 8
   followOffset: {x: 0, y: 2}
 --- !u!1 &592355721
 GameObject:
@@ -1187,6 +1187,11 @@ PrefabInstance:
         type: 3}
       propertyPath: jumpForce
       value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 342917397557353594, guid: 53a8aaf9ea72fcb4bb45fb3bc494ecde,
+        type: 3}
+      propertyPath: m_beamForce
+      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 53a8aaf9ea72fcb4bb45fb3bc494ecde, type: 3}
