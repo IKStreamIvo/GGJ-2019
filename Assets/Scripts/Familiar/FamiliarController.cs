@@ -9,7 +9,10 @@ public class FamiliarController : MonoBehaviour {
     [SerializeField] private float stopFollowDistance;
     [SerializeField] private float movementSmoothing = .05f;
     [SerializeField] private float movementSpeedMultiplier = 1.1f;
+    [SerializeField] private Animator animator;
+    [SerializeField] private SpriteRenderer sprRenderer;
 
+    private bool facingRight = true;
     private bool moveCloser;
     private Vector2 m_Velocity = Vector3.zero;
 
@@ -23,8 +26,19 @@ public class FamiliarController : MonoBehaviour {
         float dist = Mathf.Abs(transform.position.x - player.transform.position.x);
         if(!moveCloser && dist > followDistance){
             moveCloser = true;
+            animator.SetBool("Idle", false);
+            animator.SetBool("Run", true);
+            animator.SetFloat("5Second limit", 0f);
         }else if(moveCloser && dist <= stopFollowDistance){
             moveCloser = false;
+            animator.SetBool("Run", false);
+            animator.SetFloat("5Second limit", 0f);
+            animator.SetBool("Idle", true);
+        }
+
+        //Idle time
+        if(!moveCloser){
+            animator.SetFloat("5Second limit", animator.GetFloat("5Second limit") + Time.deltaTime);
         }
     }
 
@@ -36,8 +50,16 @@ public class FamiliarController : MonoBehaviour {
             float difference = player.transform.position.x - transform.position.x;
             if(difference > 0){
                 newVelocity.x *= 1;
+                if(!facingRight){
+                    facingRight = true;
+                    sprRenderer.flipX = false;
+                }
             }else{
                 newVelocity.x *= -1;
+                if(facingRight){
+                    facingRight = false;
+                    sprRenderer.flipX = true;
+                }
             }
         }else{
             newVelocity.x = 0f;
