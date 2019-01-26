@@ -399,10 +399,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 512152294}
   player: {fileID: 631928698}
-  followDistance: 3.5
-  stopFollowDistance: 1.5
+  followDistance: 4
+  stopFollowDistance: 2
   movementSmoothing: 0.1
   movementSpeedMultiplier: 1.5
+  animator: {fileID: 512152298}
+  sprRenderer: {fileID: 512152295}
 --- !u!50 &512152294
 Rigidbody2D:
   serializedVersion: 4
@@ -458,8 +460,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 777550085
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 56449600cf0784a41943a7e250b2bf44, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
@@ -480,7 +482,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 512152292}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.283, y: -1.3, z: 0.055981502}
+  m_LocalPosition: {x: -1.887, y: -1.3, z: 9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -501,7 +503,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.08197189
+  m_Radius: 0.52
 --- !u!95 &512152298
 Animator:
   serializedVersion: 3
@@ -869,7 +871,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1020949068}
   m_LocalRotation: {x: -0, y: -0, z: -0.707107, w: 0.70710665}
-  m_LocalPosition: {x: -5, y: 3.01, z: 0}
+  m_LocalPosition: {x: -5, y: 9.15, z: 0}
   m_LocalScale: {x: 10, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -973,7 +975,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1048535078}
   m_LocalRotation: {x: -0, y: -0, z: -0.707107, w: 0.70710665}
-  m_LocalPosition: {x: 5, y: 3.01, z: 0}
+  m_LocalPosition: {x: 5, y: 9.15, z: 0}
   m_LocalScale: {x: 10, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1109,7 +1111,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &1651046461
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1315,7 +1317,7 @@ Transform:
   m_GameObject: {fileID: 1757328606}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: -2.31, z: 0}
-  m_LocalScale: {x: 22.03, y: 1, z: 1}
+  m_LocalScale: {x: 169.631, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -1584,7 +1586,7 @@ PrefabInstance:
     - target: {fileID: 342917397557353593, guid: 53a8aaf9ea72fcb4bb45fb3bc494ecde,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.0546875
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 342917397557353593, guid: 53a8aaf9ea72fcb4bb45fb3bc494ecde,
         type: 3}
@@ -1625,6 +1627,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4390532543033938982, guid: 53a8aaf9ea72fcb4bb45fb3bc494ecde,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 4.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 342917397557353592, guid: 53a8aaf9ea72fcb4bb45fb3bc494ecde,
+        type: 3}
+      propertyPath: m_SortingLayerID
+      value: 777550085
+      objectReference: {fileID: 0}
+    - target: {fileID: 342917397557353592, guid: 53a8aaf9ea72fcb4bb45fb3bc494ecde,
+        type: 3}
+      propertyPath: m_SortingLayer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1319908796253233375, guid: 53a8aaf9ea72fcb4bb45fb3bc494ecde,
         type: 3}
