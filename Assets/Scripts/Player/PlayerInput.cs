@@ -67,14 +67,14 @@ public class PlayerInput : MonoBehaviour {
         if(horInput != 0f){
             newVelocity.x = moveSpeed * horInput;
             //left or right?
-			bool right = horInput > 0f ? true : false;
+			/*bool right = horInput > 0f ? true : false;
 			if (!m_FacingRight && right) {
 				Flip(m_FacingRight);
 				m_FacingRight = true;
 			}else if(m_FacingRight && !right){
 				Flip(m_FacingRight);
 				m_FacingRight = false;
-			}
+			}*/
 
 			m_moving = true;
         }else{
@@ -126,7 +126,7 @@ public class PlayerInput : MonoBehaviour {
 		transform.localScale = scl;
 	}
 
-/// <summary>
+	/// <summary>
     /// Shooting
     /// </summary>
     /// <param name="hold">Is the beam supposed to show?</param>
@@ -165,12 +165,12 @@ public class PlayerInput : MonoBehaviour {
 			targetRot = new Vector3(0f, 0f, 180f);
 		}
 		arm.localEulerAngles = targetRot;
-		if(targetRot.z < 0f && !m_FacingRight){
-			Flip(m_FacingRight);
-			m_FacingRight = true;
-		}else if(targetRot.z > 0f && m_FacingRight){
+		if(targetRot.z < 0f && m_FacingRight){
 			Flip(m_FacingRight);
 			m_FacingRight = false;
+		}else if(targetRot.z < 0f && !m_FacingRight){
+			Flip(m_FacingRight);
+			m_FacingRight = true;
 		}
 		Debug.Log(targetRot.z);
 	}
