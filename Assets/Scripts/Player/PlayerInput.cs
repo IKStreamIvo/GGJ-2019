@@ -37,6 +37,7 @@ public class PlayerInput : MonoBehaviour {
     private Vector3 targetTelekinesisOffset;
     private Vector2 newVelocity;
     private bool doJump;
+	private bool allowAbilities;
 
     private void Start() {
 		if (r2d == null)
@@ -77,17 +78,8 @@ public class PlayerInput : MonoBehaviour {
 		//Jumping
         if(Input.GetButton("Jump") && m_grounded){
 			doJump = true;
-			// if (!animator.GetBool("Jump")) {
-			// 	animator.SetBool("Jump", doJump);
-			// 	animator.SetBool("Idle", !doJump);
-			// }
 		}else{
 			doJump = false;
-			// if (animator.GetBool("Jump")) {
-			// 	animator.SetBool("Jump", doJump);
-			// } else {
-			// 	animator.SetBool("Idle", !doJump);
-			// }
 		}
         
 		//Animation
@@ -95,45 +87,53 @@ public class PlayerInput : MonoBehaviour {
 		animator.SetBool("Run", m_moving);
 		animator.SetBool("Idle", !m_moving && m_grounded);
 		if(animator.GetBool("Idle")){
+			if(!arm.gameObject.activeSelf)
+				arm.gameObject.SetActive(true);
 			animator.SetFloat("5Second Limit", animator.GetFloat("5Second Limit") + Time.deltaTime);
+			allowAbilities = true;
 		}else{
+			if(arm.gameObject.activeSelf)
+				arm.gameObject.SetActive(false);
 			animator.SetFloat("5Second Limit", 0f);
+			allowAbilities = false;
 		}
 
 		//Abilities
 		Aiming();
 		///Meditating
-        if (Input.GetKey(KeyCode.Joystick1Button3)){
-            if (!EnergyBar.EnergyFull()) { //show meditate animation.
-                EnergyBar.Drain(-1f, true);
-            }
-        } else if (Input.GetKeyUp(KeyCode.Joystick1Button3)) { //stop meditate animation.
-            EnergyBar.Drain(0f, false);
-        }
-
-		///Lazors
-		if (Input.GetAxis("LeftTrigger") > 0.1f) {
-			if (m_shot) {
-				return;
+		if(allowAbilities){
+			if (Input.GetKey(KeyCode.Joystick1Button3)){
+				if (!EnergyBar.EnergyFull()) { //show meditate animation.
+					EnergyBar.Drain(-1f, true);
+				}
+			} else if (Input.GetKeyUp(KeyCode.Joystick1Button3)) { //stop meditate animation.
+				EnergyBar.Drain(0f, false);
 			}
 
-			Shoot(true);
-			
-			EnergyBar.Drain(.5f, true);
-		} else {
-			EnergyBar.Drain(0f, false);
-			m_lRend.SetPosition(0, handPoint.position);
-			m_lRend.SetPosition(1, handPoint.position);
-		}
+			///Lazors
+			if (Input.GetAxis("LeftTrigger") > 0.1f) {
+				if (m_shot) {
+					return;
+				}
 
-		///Discs
-		if (Input.GetAxis("RightTrigger") > 0.1f) {
-			if (!m_shot) {
-				m_shot = true;
-				Shoot(false);
+				Shoot(true);
+				
+				EnergyBar.Drain(.5f, true);
+			} else {
+				EnergyBar.Drain(0f, false);
+				m_lRend.SetPosition(0, handPoint.position);
+				m_lRend.SetPosition(1, handPoint.position);
 			}
-		} else {
-			m_shot = false;
+
+			///Discs
+			if (Input.GetAxis("RightTrigger") > 0.1f) {
+				if (!m_shot) {
+					m_shot = true;
+					Shoot(false);
+				}
+			} else {
+				m_shot = false;
+			}
 		}
 	}
 
