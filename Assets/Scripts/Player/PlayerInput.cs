@@ -21,6 +21,7 @@ public class PlayerInput : MonoBehaviour {
 
 	[SerializeField] private GameObject weapon_disk;
 	[SerializeField] private Transform arm;
+	[SerializeField] private Transform handPoint;
     [SerializeField] private float m_bulletSpeed;
 
     private void Start() {
@@ -49,6 +50,8 @@ public class PlayerInput : MonoBehaviour {
 			}
 		} else {
 			EnergyBar.Drain(0f, false);
+			m_lRend.SetPosition(0, handPoint.position);
+			m_lRend.SetPosition(1, handPoint.position);
 		}
 	}
 
@@ -96,6 +99,15 @@ public class PlayerInput : MonoBehaviour {
 		} else {
 			m_shot = false;
 		}
+
+		//Meditating
+        if (Input.GetKey(KeyCode.Joystick1Button3)){
+            if (!EnergyBar.EnergyFull()) { //show meditate animation.
+                EnergyBar.Drain(-0.5f, true);
+            }
+        } else if (Input.GetKeyUp(KeyCode.Joystick1Button3)) { //stop meditate animation.
+            EnergyBar.Drain(0f, false);
+        }
 	}
 
 	private void GroundCheck(){
@@ -108,7 +120,10 @@ public class PlayerInput : MonoBehaviour {
 	}
 
 	void Flip(bool toRight) {
-			m_sRend.flipX = toRight;
+		//m_sRend.flipX = toRight;
+		Vector3 scl = transform.localScale;
+		scl.x *= -1;
+		transform.localScale = scl;
 	}
 
 /// <summary>
@@ -117,20 +132,22 @@ public class PlayerInput : MonoBehaviour {
     /// <param name="hold">Is the beam supposed to show?</param>
     void Shoot(bool hold) {
         if (hold) { //beam
-            r2d.AddForce(m_FacingRight ? Vector2.left * 10f : Vector2.right * 10f);
-            RaycastHit2D hit;
-            if(hit = Physics2D.Raycast(transform.position, transform.TransformDirection(m_FacingRight ? Vector2.right : Vector2.left), Mathf.Infinity, ~1<<10)) {
-                m_lRend.SetPosition(0, transform.position);
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.TransformDirection(m_FacingRight ? Vector2.right : Vector2.left), Mathf.Infinity, ~(1<<10));
+            if(hit.collider != null) {r2d.AddForce(m_FacingRight ? Vector2.left * 10f : Vector2.right * 10f);
+                m_lRend.SetPosition(0, handPoint.position);
                 m_lRend.SetPosition(1, hit.point);
-                Debug.Log(hit.point);
-            }
+            }else{
+				m_lRend.SetPosition(0, handPoint.position);
+                m_lRend.SetPosition(1, handPoint.position);
+			}
         } else { //disk
             if (EnergyBar.HasEnergy(0.5f)) {
                 EnergyBar.Drain(0.5f);
                 GameObject temp = Instantiate(weapon_disk, transform.position, Quaternion.identity);
                 temp.GetComponent<Rigidbody2D>().velocity = m_FacingRight ? Vector2.right * m_bulletSpeed : Vector2.left * m_bulletSpeed;
             }
-
+			m_lRend.SetPosition(0, handPoint.position);
+			m_lRend.SetPosition(1, handPoint.position);
         }
     }
 
@@ -142,11 +159,19 @@ public class PlayerInput : MonoBehaviour {
 
 	private void Aiming(){
 		float hor = Input.GetAxis("AimHor");
-		float ver = Input.GetAxis("AimVer");
+		float ver = Input.GetAxis("AimVer") * (m_FacingRight ? 1 : -1);
 		Vector3 targetRot = new Vector3 (0f, 0f, Mathf.Atan2 (ver, hor) * 180 / Mathf.PI);
 		if(hor == 0f && ver == 0f){
 			targetRot = new Vector3(0f, 0f, 180f);
 		}
 		arm.localEulerAngles = targetRot;
+		if(targetRot.z < 0f && !m_FacingRight){
+			Flip(m_FacingRight);
+			m_FacingRight = true;
+		}else if(targetRot.z > 0f && m_FacingRight){
+			Flip(m_FacingRight);
+			m_FacingRight = false;
+		}
+		Debug.Log(targetRot.z);
 	}
 }
