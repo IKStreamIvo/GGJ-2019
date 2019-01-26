@@ -24,6 +24,8 @@ public class PlayerInput : MonoBehaviour {
 	[SerializeField] private Transform handPoint;
     [SerializeField] private float m_bulletSpeed;
 
+	private Vector2 aim;
+
     private void Start() {
 		if (r2d == null)
 			r2d = GetComponent<Rigidbody2D>();
@@ -132,8 +134,9 @@ public class PlayerInput : MonoBehaviour {
     /// <param name="hold">Is the beam supposed to show?</param>
     void Shoot(bool hold) {
         if (hold) { //beam
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.TransformDirection(m_FacingRight ? Vector2.right : Vector2.left), Mathf.Infinity, ~(1<<10));
-            if(hit.collider != null) {r2d.AddForce(m_FacingRight ? Vector2.left * 10f : Vector2.right * 10f);
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, aim, Mathf.Infinity, ~(1<<10));
+            if(hit.collider != null) {
+				r2d.AddForce(-aim * 10f);
                 m_lRend.SetPosition(0, handPoint.position);
                 m_lRend.SetPosition(1, hit.point);
             }else{
@@ -144,7 +147,7 @@ public class PlayerInput : MonoBehaviour {
             if (EnergyBar.HasEnergy(0.5f)) {
                 EnergyBar.Drain(0.5f);
                 GameObject temp = Instantiate(weapon_disk, handPoint.position, Quaternion.identity);
-                temp.GetComponent<Rigidbody2D>().velocity = m_FacingRight ? Vector2.right * m_bulletSpeed : Vector2.left * m_bulletSpeed;
+                temp.GetComponent<Rigidbody2D>().velocity = aim * m_bulletSpeed;
             }
 			m_lRend.SetPosition(0, handPoint.position);
 			m_lRend.SetPosition(1, handPoint.position);
@@ -173,5 +176,7 @@ public class PlayerInput : MonoBehaviour {
 			m_FacingRight = false;
 			Flip(m_FacingRight);
 		}
+
+		aim = -(arm.position - handPoint.position).normalized;
 	}
 }
