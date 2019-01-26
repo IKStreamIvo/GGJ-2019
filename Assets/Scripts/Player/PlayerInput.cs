@@ -23,6 +23,7 @@ public class PlayerInput : MonoBehaviour {
 	[SerializeField] private Transform arm;
 	[SerializeField] private Transform handPoint;
     [SerializeField] private float m_bulletSpeed;
+	[SerializeField] private float m_petDeKetSpeed;
 
     private void Start() {
 		if (r2d == null)
@@ -67,7 +68,7 @@ public class PlayerInput : MonoBehaviour {
         if(horInput != 0f){
             newVelocity.x = moveSpeed * horInput;
             //left or right?
-			bool right = horInput > 0f ? true : false;
+			bool right = horInput > 0.1f ? true : false;
 			if (!m_FacingRight && right) {
 				Flip(m_FacingRight);
 				m_FacingRight = true;
@@ -143,7 +144,7 @@ public class PlayerInput : MonoBehaviour {
         } else { //disk
             if (EnergyBar.HasEnergy(0.5f)) {
                 EnergyBar.Drain(0.5f);
-                GameObject temp = Instantiate(weapon_disk, transform.position, Quaternion.identity);
+                GameObject temp = Instantiate(weapon_disk, handPoint.position, Quaternion.identity);
                 temp.GetComponent<Rigidbody2D>().velocity = m_FacingRight ? Vector2.right * m_bulletSpeed : Vector2.left * m_bulletSpeed;
             }
 			m_lRend.SetPosition(0, handPoint.position);
