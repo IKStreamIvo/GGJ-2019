@@ -143,7 +143,7 @@ public class PlayerInput : MonoBehaviour {
         } else { //disk
             if (EnergyBar.HasEnergy(0.5f)) {
                 EnergyBar.Drain(0.5f);
-                GameObject temp = Instantiate(weapon_disk, transform.position, Quaternion.identity);
+                GameObject temp = Instantiate(weapon_disk, handPoint.position, Quaternion.identity);
                 temp.GetComponent<Rigidbody2D>().velocity = m_FacingRight ? Vector2.right * m_bulletSpeed : Vector2.left * m_bulletSpeed;
             }
 			m_lRend.SetPosition(0, handPoint.position);
@@ -159,19 +159,19 @@ public class PlayerInput : MonoBehaviour {
 
 	private void Aiming(){
 		float hor = Input.GetAxis("AimHor");
-		float ver = Input.GetAxis("AimVer") * (m_FacingRight ? 1 : -1);
+		float ver = -Input.GetAxis("AimVer") * (m_FacingRight ? 1 : -1);
 		Vector3 targetRot = new Vector3 (0f, 0f, Mathf.Atan2 (ver, hor) * 180 / Mathf.PI);
 		if(hor == 0f && ver == 0f){
 			targetRot = new Vector3(0f, 0f, 180f);
 		}
-		arm.localEulerAngles = targetRot;
-		if(targetRot.z < 0f && m_FacingRight){
-			Flip(m_FacingRight);
-			m_FacingRight = false;
-		}else if(targetRot.z < 0f && !m_FacingRight){
-			Flip(m_FacingRight);
+		arm.localEulerAngles = -targetRot;
+
+		if(targetRot.z < 0f && !m_FacingRight){
 			m_FacingRight = true;
+			Flip(m_FacingRight);
+		}else if(targetRot.z < 0f && m_FacingRight){
+			m_FacingRight = false;
+			Flip(m_FacingRight);
 		}
-		Debug.Log(targetRot.z);
 	}
 }
