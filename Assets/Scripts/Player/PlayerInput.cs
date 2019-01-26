@@ -71,12 +71,14 @@ public class PlayerInput : MonoBehaviour {
 					m_FacingRight = false;
 				
 			}
-
 			m_moving = true;
-        }else{
+			animator.SetBool("Run", m_moving);
+			animator.SetBool("Idle", false);
+		} else{
             newVelocity.x = 0f;
 			m_moving = false;
-        }
+			animator.SetBool("Run", m_moving);
+		}
 		//Jumping
         if(Input.GetButton("Jump") && m_grounded){
 			doJump = true;
@@ -86,9 +88,10 @@ public class PlayerInput : MonoBehaviour {
 			}
 		}else{
 			doJump = false;
-			animator.SetBool("Idle", !doJump);
 			if (animator.GetBool("Jump")) {
 				animator.SetBool("Jump", doJump);
+			} else {
+				animator.SetBool("Idle", !doJump);
 			}
 		}
         
@@ -128,8 +131,6 @@ public class PlayerInput : MonoBehaviour {
 			m_shot = false;
 		}
 	}
-
-	
 
 	void FixedUpdate() {
 		Move();
