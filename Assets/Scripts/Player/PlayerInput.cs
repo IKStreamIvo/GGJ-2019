@@ -27,6 +27,7 @@ public class PlayerInput : MonoBehaviour {
 
 	private Vector2 aim;
     [SerializeField] private float groundCheckDistance;
+    private bool isAiming;
 
     private void Start() {
 		if (r2d == null)
@@ -72,14 +73,14 @@ public class PlayerInput : MonoBehaviour {
         if(horInput != 0f){
             newVelocity.x = moveSpeed * horInput;
             //left or right?
-			/*bool right = horInput > 0f ? true : false;
+			bool right = horInput > 0f ? true : false;
 			if (!m_FacingRight && right) {
 				Flip(m_FacingRight);
 				m_FacingRight = true;
 			}else if(m_FacingRight && !right){
 				Flip(m_FacingRight);
 				m_FacingRight = false;
-			}*/
+			}
 
 			m_moving = true;
         }else{
@@ -141,6 +142,7 @@ public class PlayerInput : MonoBehaviour {
     /// </summary>
     /// <param name="hold">Is the beam supposed to show?</param>
     void Shoot(bool hold) {
+		if(!isAiming) return;
         if (hold) { //beam
             RaycastHit2D hit = Physics2D.Raycast(transform.position, aim, Mathf.Infinity, ~(1<<10));
             if(hit.collider != null) {
@@ -185,6 +187,11 @@ public class PlayerInput : MonoBehaviour {
 			Flip(m_FacingRight);
 		}
 
-		aim = -(arm.position - handPoint.position).normalized;
+		if(hor != 0f && ver != 0f){
+			aim = -(arm.position - handPoint.position).normalized;
+			isAiming = true;
+		}else{
+			isAiming = false;
+		}
 	}
 }
