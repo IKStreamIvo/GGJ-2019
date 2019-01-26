@@ -90,7 +90,12 @@ public class PlayerInput : MonoBehaviour {
 
 		///Lazors
 		if (Input.GetAxis("LeftTrigger") > 0.1f) {
+			if (m_shot) {
+				return;
+			}
+
 			Shoot(true);
+			
 			EnergyBar.Drain(.5f, true);
 		} else {
 			EnergyBar.Drain(0f, false);
