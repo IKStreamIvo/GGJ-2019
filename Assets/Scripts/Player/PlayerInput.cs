@@ -9,6 +9,7 @@ public class PlayerInput : MonoBehaviour {
 	SpriteRenderer m_sRend;
     LineRenderer m_lRend;
 	Animator animator;
+	PlayerHealth pHealth;
 
 	public float moveSpeed;
 
@@ -48,6 +49,9 @@ public class PlayerInput : MonoBehaviour {
             m_lRend = GetComponent<LineRenderer>();
 		if (animator == null)
 			animator = GetComponent<Animator>();
+		if(pHealth == null) {
+			pHealth = GetComponent<PlayerHealth>();
+		}
 	}
 
 	private void Update() {
@@ -194,6 +198,12 @@ public class PlayerInput : MonoBehaviour {
 			isAiming = true;
 		}else{
 			isAiming = false;
+		}
+	}
+
+	private void OnTriggerEnter2D(Collider2D collision) {
+		if(collision.tag == "Enemy") {
+			pHealth.Hurt();
 		}
 	}
 	#endregion
