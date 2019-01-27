@@ -43,6 +43,7 @@ public class PlayerInput : MonoBehaviour {
 	private bool allowAbilities;
     private bool m_meditating;
     [SerializeField] private float maxAirSpeed;
+	[SerializeField] public Transform feetAnchor;
 
     private void Start() {
 		if (r2d == null)
