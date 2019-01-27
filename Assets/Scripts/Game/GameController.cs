@@ -22,6 +22,14 @@ public class GameController : MonoBehaviour
 		SceneManager.LoadScene(sceneToLoad, LoadSceneMode.Single);
 	}
 
+	void LoadNewScene(int sceneToLoad, bool additive) {
+		SceneManager.LoadScene(sceneToLoad, additive ? LoadSceneMode.Additive : LoadSceneMode.Single);
+	}
+
+	void LoadNewScene(string sceneToLoad, bool additive) {
+		SceneManager.LoadScene(sceneToLoad, additive ? LoadSceneMode.Additive : LoadSceneMode.Single);
+	}
+
 	public void CoroutinePasser(IEnumerator func)
     {
         StartCoroutine(func);

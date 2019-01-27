@@ -43,6 +43,7 @@ public class PlayerInput : MonoBehaviour {
 	private bool allowAbilities;
     private bool m_meditating;
     [SerializeField] private float maxAirSpeed;
+	[SerializeField] public Transform feetAnchor;
 
     private void Start() {
 		if (r2d == null)
@@ -56,6 +57,8 @@ public class PlayerInput : MonoBehaviour {
 		if(pHealth == null) {
 			pHealth = GetComponent<PlayerHealth>();
 		}
+
+		pHealth.UpdateUI();
 	}
 
 	private void Update() {
@@ -106,6 +109,9 @@ public class PlayerInput : MonoBehaviour {
 		if (Input.GetKey(KeyCode.Joystick1Button3) && !m_moving){
 			// m_meditating = true;
 			if (!EnergyBar.EnergyFull()) { //show meditate animation.
+			if(Vector2.Distance(feetAnchor.position, familiar.transform.position) > familiar.petDistance){
+				familiar.Teleport();
+			}
 				EnergyBar.Drain(-1f, true);
 				isAiming = false;
 				m_meditating = true;
@@ -152,6 +158,7 @@ public class PlayerInput : MonoBehaviour {
 			}else if(Input.GetAxis("LeftTrigger") == 0f){
 				m_lRend.SetPosition(0, handPoint.position);
 				m_lRend.SetPosition(1, handPoint.position);
+					if(!m_meditating) EnergyBar.Drain(0, false);
 			}
 
 			///Discs
@@ -235,15 +242,17 @@ public class PlayerInput : MonoBehaviour {
 	private void Shoot(bool hold) {
 		if(!isAiming) return;
         if (hold) { //beam
-            RaycastHit2D hit = Physics2D.Raycast(handPoint.position, aim, m_beamRange, ~(1 << 10));
-                r2d.AddForce(-aim * m_beamForce);
-                m_lRend.SetPosition(0, handPoint.position);
-            if(hit.collider != null) {
-                m_lRend.SetPosition(1, hit.point);
-            }else{
-                m_lRend.SetPosition(1, handPoint.position + (Vector3)aim * m_beamRange);
-            }
-			EnergyBar.Drain(0, false);
+			if(EnergyBar.HasEnergy(m_costBeam)){
+				RaycastHit2D hit = Physics2D.Raycast(handPoint.position, aim, m_beamRange, ~(1 << 10));
+					r2d.AddForce(-aim * m_beamForce);
+					m_lRend.SetPosition(0, handPoint.position);
+				if(hit.collider != null) {
+					m_lRend.SetPosition(1, hit.point);
+				}else{
+					m_lRend.SetPosition(1, handPoint.position + (Vector3)aim * m_beamRange);
+				}
+				EnergyBar.Drain(m_costBeam, true);
+			}
         }else { //disk
             if (EnergyBar.HasEnergy(m_costDisk)) {
                 EnergyBar.Drain(m_costDisk);
