@@ -92,39 +92,37 @@ public class PlayerInput : MonoBehaviour {
 		animator.SetBool("Idle", !m_moving && m_grounded);
 		if(animator.GetBool("Idle")){
 			animator.SetFloat("5Second Limit", animator.GetFloat("5Second Limit") + Time.deltaTime);
-			allowAbilities = true;
 		}else{
 			animator.SetFloat("5Second Limit", 0f);
-			allowAbilities = false;
 		}
 		
 		//Abilities
 		Aiming();
-
-		//Lazors //TODO put this back in allowAbilities when non-fried-kris found a workaround
-		if (Input.GetAxis("LeftTrigger") > 0.1f) {
-			if (m_shot) {
-				return;
+		if(isAiming){
+			animator.SetFloat("5Second Limit", 0f);
+			allowAbilities = true;
+		}
+		///Meditating
+		if (Input.GetKey(KeyCode.Joystick1Button3)){
+			if (!EnergyBar.EnergyFull()) { //show meditate animation.
+				EnergyBar.Drain(-1f, true);
 			}
-
-
-			if (EnergyBar.HasEnergy(m_costBeam * 2)) {
-				EnergyBar.Drain(m_costBeam, true);
-			}
-
-			Shoot(true);
-			//m_lRend.SetPosition(0, handPoint.position);
-			//m_lRend.SetPosition(1, handPoint.position);
+		} else if (Input.GetKeyUp(KeyCode.Joystick1Button3)) { //stop meditate animation.
+			EnergyBar.Drain(0f, false);
 		}
 
-		///Meditating
+		//Lazors //TODO put this back in allowAbilities when non-fried-kris found a workaround
 		if (allowAbilities){
-			if (Input.GetKey(KeyCode.Joystick1Button3)){
-				if (!EnergyBar.EnergyFull()) { //show meditate animation.
-					EnergyBar.Drain(-1f, true);
+			if (Input.GetAxis("LeftTrigger") > 0.1f) {
+				if (m_shot) {
+					return;
 				}
-			} else if (Input.GetKeyUp(KeyCode.Joystick1Button3)) { //stop meditate animation.
-				EnergyBar.Drain(0f, false);
+
+				if (EnergyBar.HasEnergy(m_costBeam * 2)) {
+					EnergyBar.Drain(m_costBeam, true);
+				}
+
+				Shoot(true);
 			}
 
 			///Discs
@@ -205,24 +203,16 @@ public class PlayerInput : MonoBehaviour {
 	private void Shoot(bool hold) {
 		if(!isAiming) return;
         if (hold) { //beam
-            RaycastHit2D hit = Physics2D.Raycast(handPoint.position, aim, Mathf.Infinity, ~1<<10);
+            RaycastHit2D hit = Physics2D.Raycast(handPoint.position, aim, Mathf.Infinity);
+                r2d.AddForce(-aim * m_beamForce);
             if(hit.collider != null) {
-				r2d.AddForce(-aim * m_beamForce);
                 m_lRend.SetPosition(0, handPoint.position);
                 m_lRend.SetPosition(1, hit.point);
             }else{
-				m_lRend.SetPosition(0, handPoint.position);
+                m_lRend.SetPosition(0, handPoint.position);
                 m_lRend.SetPosition(1, handPoint.position);
-				EnergyBar.Drain(0, false);
-			}
-        } else { //disk
-            if (EnergyBar.HasEnergy(m_costDisk)) {
-                EnergyBar.Drain(m_costDisk);
-                GameObject temp = Instantiate(weapon_disk, handPoint.position, Quaternion.identity);
-                temp.GetComponent<Rigidbody2D>().velocity = aim * m_bulletSpeed;
             }
-			//m_lRend.SetPosition(0, handPoint.position);
-			//m_lRend.SetPosition(1, handPoint.position);
+                EnergyBar.Drain(0, false);
         }
     }
 
