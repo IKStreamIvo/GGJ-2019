@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerHealth : MonoBehaviour
 {
 
-	[SerializeField] private int health = 3;
+	[SerializeField] private static int health = 3;
 
     // Update is called once per frame
     void Update() {
@@ -15,8 +15,13 @@ public class PlayerHealth : MonoBehaviour
 	public void Hurt() {
 		if(health >= 1) {
 			health--;
+			SoundEffects.Play(SoundEffects.Clips.Hurt1); //TODO change hurt
 		} else {
 			//die();
 		}
+	}
+
+	public static void Reheal() {
+		health = 3;
 	}
 }

@@ -183,15 +183,6 @@ public class PlayerInput : MonoBehaviour {
 			targetRot = new Vector3(0f, 0f, 180f);
 		}
 		arm.localEulerAngles = -targetRot;
-
-		/*
-		if(targetRot.z < 0f && !m_FacingRight){
-			m_FacingRight = true;
-			Flip(!m_FacingRight);
-		}else if(targetRot.z < 0f && m_FacingRight){
-			m_FacingRight = false;
-			Flip(!m_FacingRight);
-		}*/
 		
 		if(hor != 0f || ver != 0f){
 			aim = -(arm.position - handPoint.position).normalized;
@@ -204,6 +195,9 @@ public class PlayerInput : MonoBehaviour {
 	private void OnTriggerEnter2D(Collider2D collision) {
 		if(collision.tag == "Enemy") {
 			pHealth.Hurt();
+		}
+		if(collision.tag == "Achievement") {
+			Achievements.AwardAchievement(collision.GetComponent<Achievement>().achievement.index);
 		}
 	}
 	#endregion

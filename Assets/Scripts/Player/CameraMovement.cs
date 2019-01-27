@@ -11,6 +11,10 @@ public class CameraMovement : MonoBehaviour {
         Vector3 followPos = target.position;
         followPos += (Vector3)followOffset;
         followPos.z = transform.position.z;
-        transform.position = Vector3.MoveTowards(transform.position, followPos, followSpeed * Time.fixedDeltaTime);    
+		if(Vector3.Distance(transform.position, followPos) > 8f) {
+			transform.position = followPos;
+		} else {
+			transform.position = Vector3.MoveTowards(transform.position, followPos, followSpeed * Time.fixedDeltaTime);
+		}
     }
 }

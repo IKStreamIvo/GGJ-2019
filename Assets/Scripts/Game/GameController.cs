@@ -10,6 +10,8 @@ public class GameController : MonoBehaviour
     void Start()
     {
 		gCont = this;
+
+		Achievements.me.LoadAchievements();
     }
 
 	void LoadNewScene(int sceneToLoad) {
@@ -23,5 +25,9 @@ public class GameController : MonoBehaviour
 	public void CoroutinePasser(IEnumerator func)
     {
         StartCoroutine(func);
+	}
+
+	public void OnApplicationQuit() {
+		Achievements.me.SaveAchievements();
 	}
 }
