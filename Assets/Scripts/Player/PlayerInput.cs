@@ -91,22 +91,13 @@ public class PlayerInput : MonoBehaviour {
 		animator.SetBool("Run", m_moving);
 		animator.SetBool("Idle", !m_moving && m_grounded);
 		if(animator.GetBool("Idle")){
-			if (animator.GetBool("Run")) {
-				if (!arm.gameObject.activeSelf)
-					arm.gameObject.SetActive(true);
-			}
 			animator.SetFloat("5Second Limit", animator.GetFloat("5Second Limit") + Time.deltaTime);
 			allowAbilities = true;
 		}else{
-			if (arm.gameObject.activeSelf) {
-				if (!animator.GetBool("Run")) {
-					arm.gameObject.SetActive(false);
-				}
-			}
 			animator.SetFloat("5Second Limit", 0f);
 			allowAbilities = false;
 		}
-
+		
 		//Abilities
 		Aiming();
 
