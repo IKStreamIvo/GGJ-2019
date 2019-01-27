@@ -60,6 +60,9 @@ public class Achievements : MonoBehaviour{
 			achievements[a].index = int.Parse(splitString[1]);
 			achievements[a].achieved = bool.Parse(splitString[2]);
 
+			if(achievementObjects[a] == null) {
+				return;
+			}
 			achievementObjects[a].GetComponent<Achievement>().RetrieveData();
 		}
 	}
