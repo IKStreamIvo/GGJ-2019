@@ -1283,6 +1283,16 @@ PrefabInstance:
       propertyPath: familiar
       value: 
       objectReference: {fileID: 305460359}
+    - target: {fileID: 342917397557353594, guid: 53a8aaf9ea72fcb4bb45fb3bc494ecde,
+        type: 3}
+      propertyPath: m_beamRange
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 342917397557353594, guid: 53a8aaf9ea72fcb4bb45fb3bc494ecde,
+        type: 3}
+      propertyPath: maxAirSpeed
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 53a8aaf9ea72fcb4bb45fb3bc494ecde, type: 3}
 --- !u!1001 &1193986331061210379
@@ -1297,6 +1307,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Familiar
       objectReference: {fileID: 0}
+    - target: {fileID: 1193986330750984174, guid: 3e13caa520b741e4a9385619e0f2971d,
+        type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 631928698}
     - target: {fileID: 1193986330750984163, guid: 3e13caa520b741e4a9385619e0f2971d,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1352,11 +1367,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1193986330750984174, guid: 3e13caa520b741e4a9385619e0f2971d,
-        type: 3}
-      propertyPath: player
-      value: 
-      objectReference: {fileID: 631928698}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3e13caa520b741e4a9385619e0f2971d, type: 3}
 --- !u!1001 &3554740631665646200
@@ -1425,47 +1435,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3554740631124765911, guid: be676318ca45e7e4a91640097c554914,
-        type: 3}
-      propertyPath: _health
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3554740631124765911, guid: be676318ca45e7e4a91640097c554914,
-        type: 3}
-      propertyPath: _range
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 3554740631124765911, guid: be676318ca45e7e4a91640097c554914,
-        type: 3}
-      propertyPath: attackDelay
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 3554740631124765911, guid: be676318ca45e7e4a91640097c554914,
-        type: 3}
-      propertyPath: projectileVelocity
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3554740631124765911, guid: be676318ca45e7e4a91640097c554914,
-        type: 3}
-      propertyPath: projectilePrefab
-      value: 
-      objectReference: {fileID: 6708301651566780421, guid: af5a500379060af489ff39e34c2c7d12,
-        type: 3}
-    - target: {fileID: 5435365602798401550, guid: be676318ca45e7e4a91640097c554914,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5435365602798401550, guid: be676318ca45e7e4a91640097c554914,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5435365602798401550, guid: be676318ca45e7e4a91640097c554914,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 180
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: be676318ca45e7e4a91640097c554914, type: 3}
