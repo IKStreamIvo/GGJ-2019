@@ -136,8 +136,10 @@ MonoBehaviour:
   m_beamForce: 20
   m_pushForce: 5
   m_costBeam: 1
+  m_beamRange: 0
   m_costDisk: 0.5
   groundCheckDistance: 2.2
+  maxAirSpeed: 5
 --- !u!70 &4390532543033938982
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
