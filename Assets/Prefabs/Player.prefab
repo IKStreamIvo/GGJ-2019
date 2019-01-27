@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 342917397557353594}
   - component: {fileID: 4390532543033938982}
   - component: {fileID: 601635131}
+  - component: {fileID: 6607483131908601096}
   m_Layer: 10
   m_Name: Player
   m_TagString: Untagged
@@ -255,6 +256,25 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
+--- !u!95 &6607483131908601096
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 342917397557353589}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: f32f8f4790f598145acc9b72b06a2364, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1319908796253233375
 GameObject:
   m_ObjectHideFlags: 0
