@@ -30,6 +30,7 @@ public class PlayerInput : MonoBehaviour {
 	[SerializeField] private float m_beamForce;
 	[SerializeField] private float m_pushForce;
 	[SerializeField] private float m_costBeam;
+	[SerializeField] private float m_beamRange;
 	[SerializeField] private float m_costDisk;
 
 	private Vector2 aim;
@@ -41,6 +42,7 @@ public class PlayerInput : MonoBehaviour {
     private bool doJump;
 	private bool allowAbilities;
     private bool m_meditating;
+    [SerializeField] private float maxAirSpeed;
 
     private void Start() {
 		if (r2d == null)
@@ -88,7 +90,7 @@ public class PlayerInput : MonoBehaviour {
 		}
         
 		//Animation
-		animator.SetBool("Jump", !m_grounded);
+		animator.SetBool("Jump", !m_grounded && m_shot);
 		animator.SetBool("Run", m_moving);
 		animator.SetBool("Idle", !m_moving && m_grounded);
 		animator.SetBool("Pet", m_meditating);
@@ -137,7 +139,7 @@ public class PlayerInput : MonoBehaviour {
 
 		//Lazors //TODO put this back in allowAbilities when non-fried-kris found a workaround
 		if (allowAbilities){
-			if (Input.GetAxis("LeftTrigger") > 0.1f) {
+			if (Input.GetAxis("LeftTrigger") > 0.5f) {
 				if (m_shot) {
 					return;
 				}
@@ -147,12 +149,13 @@ public class PlayerInput : MonoBehaviour {
 				}
 
 				Shoot(true);
-			}else if(Input.GetAxis("RightTrigger") == 0f){
-
+			}else if(Input.GetAxis("LeftTrigger") == 0f){
+				m_lRend.SetPosition(0, handPoint.position);
+				m_lRend.SetPosition(1, handPoint.position);
 			}
 
 			///Discs
-			if (Input.GetAxis("RightTrigger") != 0f) {
+			if (Input.GetAxis("RightTrigger") > .5f) {
 				if (!m_shot) {
 					m_shot = true;
 					Shoot(false);
@@ -179,6 +182,9 @@ public class PlayerInput : MonoBehaviour {
 		} else {
 
 		}
+		Vector2 vel = r2d.velocity;
+		vel.y = Mathf.Clamp(vel.y, -maxAirSpeed, maxAirSpeed);
+		r2d.velocity = vel;
 	}
 
 	private void GroundCheck(){
@@ -229,14 +235,13 @@ public class PlayerInput : MonoBehaviour {
 	private void Shoot(bool hold) {
 		if(!isAiming) return;
         if (hold) { //beam
-            RaycastHit2D hit = Physics2D.Raycast(handPoint.position, aim, Mathf.Infinity);
+            RaycastHit2D hit = Physics2D.Raycast(handPoint.position, aim, m_beamRange, ~(1 << 10));
                 r2d.AddForce(-aim * m_beamForce);
-            if(hit.collider != null) {
                 m_lRend.SetPosition(0, handPoint.position);
+            if(hit.collider != null) {
                 m_lRend.SetPosition(1, hit.point);
             }else{
-                m_lRend.SetPosition(0, handPoint.position);
-                m_lRend.SetPosition(1, handPoint.position);
+                m_lRend.SetPosition(1, handPoint.position + (Vector3)aim * m_beamRange);
             }
 			EnergyBar.Drain(0, false);
         }else { //disk
