@@ -57,6 +57,8 @@ public class PlayerInput : MonoBehaviour {
 		if(pHealth == null) {
 			pHealth = GetComponent<PlayerHealth>();
 		}
+
+		pHealth.UpdateUI();
 	}
 
 	private void Update() {
