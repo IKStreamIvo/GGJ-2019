@@ -6,6 +6,7 @@ public class PlayerHealth : MonoBehaviour
 {
 
 	[SerializeField] private static int health = 3;
+	[SerializeField] private bool invincable;
 
     // Update is called once per frame
     void Update() {
@@ -14,8 +15,11 @@ public class PlayerHealth : MonoBehaviour
 
 	public void Hurt() {
 		if(health >= 1) {
+			SoundEffects.Play(7 + Random.Range(0, 3)); //TODO change hurt
+			if (invincable)
+				return;
+
 			health--;
-			SoundEffects.Play(SoundEffects.Clips.Hurt1); //TODO change hurt
 		} else {
 			//die();
 		}
