@@ -23,8 +23,8 @@ public class SoundEffects : MonoBehaviour {
 
             src.clip = soundEffects[index];
             src.loop = false;
-
             GameController.gCont.CoroutinePasser(DestroyClipWhenDone(src));
+			src.Play();
             return src.clip.length;
         }else{
             Debug.LogError("Sound Effect #" + index + " not found!");
