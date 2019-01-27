@@ -119,12 +119,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 1193986330750984173}
   player: {fileID: 0}
-  followDistance: 4
+  followDistance: 7
   stopFollowDistance: 2
   movementSmoothing: 0.1
   movementSpeedMultiplier: 1.5
   animator: {fileID: 1193986330750984161}
   sprRenderer: {fileID: 1193986330750984172}
+  petDistance: 1.2
 --- !u!58 &1193986330750984162
 CircleCollider2D:
   m_ObjectHideFlags: 0

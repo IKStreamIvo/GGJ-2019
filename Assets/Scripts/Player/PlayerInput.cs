@@ -12,7 +12,8 @@ public class PlayerInput : MonoBehaviour {
 	PlayerHealth pHealth;
 
 	public float moveSpeed;
-
+	[SerializeField] private FamiliarController familiar;
+	
 	[SerializeField] private bool m_FacingRight;
 	[SerializeField] private bool m_crouching;
 	[SerializeField] private bool m_moving;
@@ -39,6 +40,7 @@ public class PlayerInput : MonoBehaviour {
     private Vector2 newVelocity;
     private bool doJump;
 	private bool allowAbilities;
+    private bool m_meditating;
 
     private void Start() {
 		if (r2d == null)
@@ -77,7 +79,6 @@ public class PlayerInput : MonoBehaviour {
             newVelocity.x = 0f;
 			m_moving = false;
 		}
-		
 
 		//Jumping
         if(Input.GetButton("Jump") && m_grounded){
@@ -90,6 +91,7 @@ public class PlayerInput : MonoBehaviour {
 		animator.SetBool("Jump", !m_grounded);
 		animator.SetBool("Run", m_moving);
 		animator.SetBool("Idle", !m_moving && m_grounded);
+		animator.SetBool("Pet", m_meditating);
 		if(animator.GetBool("Idle")){
 			animator.SetFloat("5Second Limit", animator.GetFloat("5Second Limit") + Time.deltaTime);
 		}else{
@@ -98,17 +100,39 @@ public class PlayerInput : MonoBehaviour {
 		
 		//Abilities
 		Aiming();
+		///Meditating
+		if (Input.GetKey(KeyCode.Joystick1Button3) && !m_moving){
+			// m_meditating = true;
+			if (!EnergyBar.EnergyFull()) { //show meditate animation.
+				EnergyBar.Drain(-1f, true);
+				isAiming = false;
+				m_meditating = true;
+				familiar.Pet(true);
+
+				bool right = (familiar.transform.position.x - transform.position.x ) > 0f ? true : false;
+				if (!m_FacingRight && right) {
+					Flip(m_FacingRight);
+					m_FacingRight = true;
+				}else if(m_FacingRight && !right){
+					Flip(m_FacingRight);
+					m_FacingRight = false;
+				}
+			}else{
+				m_meditating = false;
+				familiar.Pet(false);
+				EnergyBar.Drain(0f, false);
+			}
+		} else if (m_meditating) { //stop meditate animation.
+			EnergyBar.Drain(0f, false);
+			m_meditating = false;
+			familiar.Pet(false);
+		} else{
+
+		}
+
 		if(isAiming){
 			animator.SetFloat("5Second Limit", 0f);
 			allowAbilities = true;
-		}
-		///Meditating
-		if (Input.GetKey(KeyCode.Joystick1Button3)){
-			if (!EnergyBar.EnergyFull()) { //show meditate animation.
-				EnergyBar.Drain(-1f, true);
-			}
-		} else if (Input.GetKeyUp(KeyCode.Joystick1Button3)) { //stop meditate animation.
-			EnergyBar.Drain(0f, false);
 		}
 
 		//Lazors //TODO put this back in allowAbilities when non-fried-kris found a workaround
@@ -123,10 +147,12 @@ public class PlayerInput : MonoBehaviour {
 				}
 
 				Shoot(true);
+			}else if(Input.GetAxis("RightTrigger") == 0f){
+
 			}
 
 			///Discs
-			if (Input.GetAxis("RightTrigger") > 0.1f) {
+			if (Input.GetAxis("RightTrigger") != 0f) {
 				if (!m_shot) {
 					m_shot = true;
 					Shoot(false);
@@ -212,8 +238,14 @@ public class PlayerInput : MonoBehaviour {
                 m_lRend.SetPosition(0, handPoint.position);
                 m_lRend.SetPosition(1, handPoint.position);
             }
-                EnergyBar.Drain(0, false);
-        }
+			EnergyBar.Drain(0, false);
+        }else { //disk
+            if (EnergyBar.HasEnergy(m_costDisk)) {
+                EnergyBar.Drain(m_costDisk);
+                GameObject temp = Instantiate(weapon_disk, handPoint.position, Quaternion.identity);
+                temp.GetComponent<Rigidbody2D>().velocity = aim * m_bulletSpeed;
+            }
+		}
     }
 
 	private void Telekinesis(){
