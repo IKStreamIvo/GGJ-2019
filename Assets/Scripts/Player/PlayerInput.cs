@@ -91,42 +91,49 @@ public class PlayerInput : MonoBehaviour {
 		animator.SetBool("Run", m_moving);
 		animator.SetBool("Idle", !m_moving && m_grounded);
 		if(animator.GetBool("Idle")){
-			if(!arm.gameObject.activeSelf)
-				arm.gameObject.SetActive(true);
+			if (animator.GetBool("Run")) {
+				if (!arm.gameObject.activeSelf)
+					arm.gameObject.SetActive(true);
+			}
 			animator.SetFloat("5Second Limit", animator.GetFloat("5Second Limit") + Time.deltaTime);
 			allowAbilities = true;
 		}else{
-			if(arm.gameObject.activeSelf)
-				arm.gameObject.SetActive(false);
+			if (arm.gameObject.activeSelf) {
+				if (!animator.GetBool("Run")) {
+					arm.gameObject.SetActive(false);
+				}
+			}
 			animator.SetFloat("5Second Limit", 0f);
 			allowAbilities = false;
 		}
 
 		//Abilities
 		Aiming();
+
+		//Lazors //TODO put this back in allowAbilities when non-fried-kris found a workaround
+		if (Input.GetAxis("LeftTrigger") > 0.1f) {
+			if (m_shot) {
+				return;
+			}
+
+
+			if (EnergyBar.HasEnergy(m_costBeam * 2)) {
+				EnergyBar.Drain(m_costBeam, true);
+			}
+
+			Shoot(true);
+			//m_lRend.SetPosition(0, handPoint.position);
+			//m_lRend.SetPosition(1, handPoint.position);
+		}
+
 		///Meditating
-		if(allowAbilities){
+		if (allowAbilities){
 			if (Input.GetKey(KeyCode.Joystick1Button3)){
 				if (!EnergyBar.EnergyFull()) { //show meditate animation.
 					EnergyBar.Drain(-1f, true);
 				}
 			} else if (Input.GetKeyUp(KeyCode.Joystick1Button3)) { //stop meditate animation.
 				EnergyBar.Drain(0f, false);
-			}
-
-			///Lazors
-			if (Input.GetAxis("LeftTrigger") > 0.1f) {
-				if (m_shot) {
-					return;
-				}
-
-				Shoot(true);
-				
-				EnergyBar.Drain(.5f, true);
-			} else {
-				EnergyBar.Drain(0f, false);
-				m_lRend.SetPosition(0, handPoint.position);
-				m_lRend.SetPosition(1, handPoint.position);
 			}
 
 			///Discs
@@ -175,6 +182,7 @@ public class PlayerInput : MonoBehaviour {
 		transform.localScale = scl;
 	}
 
+	//TODO work on arm rotation when running
 	private void Aiming(){
 		float hor = Input.GetAxis("AimHor");
 		float ver = -Input.GetAxis("AimVer") * (m_FacingRight ? 1 : -1);
@@ -206,7 +214,7 @@ public class PlayerInput : MonoBehaviour {
 	private void Shoot(bool hold) {
 		if(!isAiming) return;
         if (hold) { //beam
-            RaycastHit2D hit = Physics2D.Raycast(handPoint.position, aim, Mathf.Infinity, ~(1<<10));
+            RaycastHit2D hit = Physics2D.Raycast(handPoint.position, aim, Mathf.Infinity, ~1<<10);
             if(hit.collider != null) {
 				r2d.AddForce(-aim * m_beamForce);
                 m_lRend.SetPosition(0, handPoint.position);
@@ -214,6 +222,7 @@ public class PlayerInput : MonoBehaviour {
             }else{
 				m_lRend.SetPosition(0, handPoint.position);
                 m_lRend.SetPosition(1, handPoint.position);
+				EnergyBar.Drain(0, false);
 			}
         } else { //disk
             if (EnergyBar.HasEnergy(m_costDisk)) {

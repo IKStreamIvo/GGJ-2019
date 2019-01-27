@@ -285,7 +285,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8610099096761502149}
   - component: {fileID: 556450831122293157}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: wahmens_arm (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -378,8 +378,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5374554618911139022}
-  m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
-  m_LocalPosition: {x: -0.197, y: 0.96, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: -1, w: -0.00000004371139}
+  m_LocalPosition: {x: -0.273, y: 0.96, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 8610099096761502149}
@@ -395,7 +395,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5279218664013275192}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: hand point
   m_TagString: Untagged
   m_Icon: {fileID: 0}

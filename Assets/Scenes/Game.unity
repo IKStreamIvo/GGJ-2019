@@ -1624,16 +1624,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3540864860140683060, guid: 884302b5c2b3a1e4b9a035b4670ce2ab,
         type: 3}
-      propertyPath: achievementObjects.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3540864860140683060, guid: 884302b5c2b3a1e4b9a035b4670ce2ab,
-        type: 3}
-      propertyPath: achievements.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3540864860140683060, guid: 884302b5c2b3a1e4b9a035b4670ce2ab,
-        type: 3}
       propertyPath: achievementObjects.Array.data[0]
       value: 
       objectReference: {fileID: 1416492885}
@@ -1642,15 +1632,5 @@ PrefabInstance:
       propertyPath: achievementObjects.Array.data[1]
       value: 
       objectReference: {fileID: 715613180}
-    - target: {fileID: 3540864860140683060, guid: 884302b5c2b3a1e4b9a035b4670ce2ab,
-        type: 3}
-      propertyPath: achievements.Array.data[1].objectName
-      value: hoi
-      objectReference: {fileID: 0}
-    - target: {fileID: 3540864860140683060, guid: 884302b5c2b3a1e4b9a035b4670ce2ab,
-        type: 3}
-      propertyPath: achievements.Array.data[1].index
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 884302b5c2b3a1e4b9a035b4670ce2ab, type: 3}

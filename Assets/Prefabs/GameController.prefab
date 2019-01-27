@@ -60,6 +60,10 @@ MonoBehaviour:
   - objectName: boobs
     index: 0
     achieved: 0
+  - objectName: hoi
+    index: 1
+    achieved: 0
   achievementObjects:
+  - {fileID: 0}
   - {fileID: 0}
   dataPath: 
