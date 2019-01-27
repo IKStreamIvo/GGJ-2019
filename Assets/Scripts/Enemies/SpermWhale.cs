@@ -22,18 +22,18 @@ public class SpermWhale : Enemy {
 	public override void Update() {
 		base.Update();
 
-		
-		Vector2 direction = (player.position - transform.position).normalized;
-		if(direction.x < 0) {
-			if (!sr.flipX)
-				sr.flipX = true;
-		} else {
-			if (sr.flipX)
-				sr.flipX = false;
+		if (isPlayerInRange()) {
+			Vector2 direction = (player.position - transform.position).normalized;
+			if (direction.x < 0) {
+				if (!sr.flipX)
+					sr.flipX = true;
+			} else {
+				if (sr.flipX)
+					sr.flipX = false;
+			}
+
+			direction *= movementSpeed;
+			r2d.velocity = direction;
 		}
-
-		direction *= movementSpeed;
-		r2d.velocity = direction;
-
 	}
 }
